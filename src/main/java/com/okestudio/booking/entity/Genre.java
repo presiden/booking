@@ -2,12 +2,18 @@ package com.okestudio.booking.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "genre")
 public class Genre extends BaseEntity{
 
     @Column(name = "name", nullable = false, unique = true, length = 20)
@@ -18,13 +24,6 @@ public class Genre extends BaseEntity{
 
     @Column(name = "is_active")
     private Boolean isActive = Boolean.TRUE;
-
-    public Genre() {
-    }
-
-    public Genre(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {

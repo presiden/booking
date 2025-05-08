@@ -5,16 +5,18 @@ import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class Users extends Auditable {
+public class Users extends BaseEntity {
 
     @Column(length = 30, nullable = false, unique = true)
     private String username;
@@ -36,4 +38,8 @@ public class Users extends Auditable {
 
     @Column(name = "image_path", length = 512)
     private String imagePath;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
 }

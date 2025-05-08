@@ -6,16 +6,18 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users_address")
-public class UsersAddress extends Auditable {
+public class UsersAddress extends BaseEntity {
 
     @Column(length = 50, nullable = false)
     private String name;
@@ -38,4 +40,8 @@ public class UsersAddress extends Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     private Users users;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
 }

@@ -4,23 +4,25 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import lombok.Data;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Data
+@Table(name = "film")
 public class Film extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private String title;
 
@@ -44,7 +46,7 @@ public class Film extends BaseEntity {
         joinColumns = @JoinColumn(name = "film_id"),
         inverseJoinColumns = @JoinColumn(name = "subtitle_id")
     )
-    private Set<Subtitle> subtitle;
+    private Set<Languages> subtitle;
 
     private Integer duration;
 
@@ -75,4 +77,8 @@ public class Film extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "star_id")
     )
     private Set<Person> stars;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
 }

@@ -2,6 +2,7 @@ package com.okestudio.booking.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Theater extends Auditable {
+@Table(name = "theater")
+public class Theater extends BaseEntity {
     
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -31,19 +33,6 @@ public class Theater extends Auditable {
     @Column(name = "image_path", nullable = true, length = 512)
     private String imagePath;
 
-    @Override
-    public String toString() {
-        return "Theater{" +
-                "id=" + super.getId() +
-                ", createdBy='" + super.getCreatedBy() + '\'' +
-                ", createdDate=" + super.getCreatedDate() +
-                ", modifiedBy='" + super.getModifiedBy() + '\'' +
-                ", modifiedDate=" + super.getModifiedDate() +
-                ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", imagePath='" + imagePath + '\'' +
-                '}';
-    }
+    @Column(name = "is_active")
+    private Boolean isActive;
 }

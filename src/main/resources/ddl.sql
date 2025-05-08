@@ -6,24 +6,6 @@ CREATE TABLE genre (
     UNIQUE(name)
 );
 
-CREATE TABLE languages (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(20),
-    description TEXT,
-    is_active BOOL,
-    UNIQUE(name)
-);
-
-CREATE TABLE person (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(50),
-    writer bool DEFAULT FALSE,
-    director bool DEFAULT FALSE,
-    star bool DEFAULT FALSE,
-    is_active BOOL,
-    UNIQUE(name)
-);
-
 CREATE TABLE country (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(20),
@@ -57,13 +39,7 @@ CREATE TABLE theater (
     email VARCHAR(50),
     phone VARCHAR(20),
     image_path VARCHAR(512),
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
+    is_active BOOL,
     UNIQUE(name),
     UNIQUE(code)
 );
@@ -73,19 +49,13 @@ CREATE TABLE theater_room (
     name VARCHAR(50),
     code VARCHAR(5),
     theater_id BIGINT,
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
+    is_active BOOL,
     UNIQUE(name),
     UNIQUE(code),
     FOREIGN KEY (theater_id) REFERENCES theater(id)
 );
 
-CREATE TABLE theater_location (
+CREATE TABLE theater_address (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(20),
     country_id BIGINT,
@@ -93,13 +63,7 @@ CREATE TABLE theater_location (
     city_id BIGINT,
     address_line VARCHAR(256),
     theater_id BIGINT,
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
+    is_active BOOL,
     UNIQUE(name),
     FOREIGN KEY (country_id) REFERENCES country(id),
     FOREIGN KEY (province_id) REFERENCES province(id),
@@ -116,13 +80,7 @@ CREATE TABLE users (
     password VARCHAR(512),
     birth_date DATE,
     image_path VARCHAR(512),
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
+    is_active BOOL,
     UNIQUE(username),
     UNIQUE(name),
     UNIQUE(email)
@@ -136,13 +94,7 @@ CREATE TABLE users_address (
     city_id BIGINT,
     address_line VARCHAR(256),
     users_id BIGINT,
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
+    is_active BOOL,
     UNIQUE(name),
     FOREIGN KEY (country_id) REFERENCES country(id),
     FOREIGN KEY (province_id) REFERENCES province(id),
@@ -150,12 +102,13 @@ CREATE TABLE users_address (
     FOREIGN KEY (users_id) REFERENCES users(id)
 );
 
-CREATE TABLE subtitle (
+CREATE TABLE languages (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(50),
     code VARCHAR(5),
     is_active BOOL,
-    UNIQUE(name)
+    UNIQUE(name),
+    UNIQUE(code)
 );
 
 CREATE TABLE film (
@@ -164,20 +117,12 @@ CREATE TABLE film (
     description TEXT,
 	languages_id BIGINT,
 	duration INTEGER,
-	director_id BIGINT,
 	image_path VARCHAR(512),
 	trailer_path VARCHAR(512),
 	release_date timestamp,
 	rating_average NUMERIC(5,2),
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
-    FOREIGN KEY (languages_id) REFERENCES languages(id),
-    FOREIGN KEY (director_id) REFERENCES person(id)
+    is_active BOOL,
+    FOREIGN KEY (languages_id) REFERENCES languages(id)
 );
 
 CREATE TABLE film_genre (
@@ -189,24 +134,8 @@ CREATE TABLE film_genre (
 
 CREATE TABLE film_subtitle (
     film_id BIGINT REFERENCES film(id),
-    subtitle_id BIGINT REFERENCES subtitle(id),
+    subtitle_id BIGINT REFERENCES languages(id),
     PRIMARY KEY (film_id, subtitle_id)
-);
-
-CREATE TABLE film_writer (
-    film_id BIGINT,
-    writer_id BIGINT,
-    PRIMARY KEY (film_id, writer_id),
-    FOREIGN KEY (film_id) REFERENCES person(id),
-    FOREIGN KEY (writer_id) REFERENCES person(id)
-);
-
-CREATE TABLE film_star (
-    film_id BIGINT,
-    star_id BIGINT,
-    PRIMARY KEY (film_id, star_id),
-    FOREIGN KEY (film_id) REFERENCES person(id),
-    FOREIGN KEY (star_id) REFERENCES person(id)
 );
 
 CREATE TABLE rating (
@@ -214,13 +143,6 @@ CREATE TABLE rating (
     film_id BIGINT,
     users_id BIGINT,
     value INTEGER,
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
     FOREIGN KEY (film_id) REFERENCES film(id),
     FOREIGN KEY (users_id) REFERENCES users(id)
 );
@@ -230,17 +152,10 @@ CREATE TABLE shows (
     "date" DATE,
     "time" TIME,
     film_id BIGINT,
-    theater_id BIGINT,
     theater_room_id BIGINT,
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
+    price NUMERIC(10,2),
+    is_active BOOL,
     FOREIGN KEY (film_id) REFERENCES film(id),
-    FOREIGN KEY (theater_id) REFERENCES theater(id),
     FOREIGN KEY (theater_room_id) REFERENCES theater_room(id)
 );
 
@@ -250,14 +165,7 @@ CREATE TABLE booking (
     users_id BIGINT,     
     shows_id BIGINT,           
     booking_time timestamp,  
-    status VARCHAR(20),    
-    created_by VARCHAR(100),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_by VARCHAR(100),
-    modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by VARCHAR(100),
-    deleted_date TIMESTAMP,
-    deleted BOOL,
+    status VARCHAR(20), ---- AVAILABLE, IN_BOOKING, BOOKED, CANCELLED, EXPIRED
     UNIQUE(booking_number),
     FOREIGN KEY (users_id) REFERENCES users(id),    
     FOREIGN KEY (shows_id) REFERENCES shows(id)
@@ -269,6 +177,9 @@ CREATE TABLE seat (
     row_label VARCHAR(5),      -- contoh: A, B
     seat_number INT,           -- contoh: 1, 2
     seat_type VARCHAR(20),     -- regular, VIP
+    x_coordinate INT,         -- posisi x dalam theater room
+    y_coordinate INT,         -- posisi y dalam theater room
+    additional_price NUMERIC(10,2), -- harga tambahan untuk kursi ini
     is_active BOOL,
     UNIQUE(theater_room_id, row_label, seat_number),
     FOREIGN KEY (theater_room_id) REFERENCES theater_room(id)
@@ -280,4 +191,28 @@ CREATE TABLE booking_seat (
     PRIMARY KEY (booking_id, seat_id),
     FOREIGN KEY (booking_id) REFERENCES booking(id),
     FOREIGN KEY (seat_id) REFERENCES seat(id)
+);
+
+CREATE TABLE payment (
+    id BIGSERIAL PRIMARY KEY,
+    payment_number VARCHAR(20),
+    booking_id BIGINT,
+    payment_method VARCHAR(20), --VA, Gopay, OVO, QRIS, etc
+    payment_time timestamp,
+    amount NUMERIC(10,2),
+    status VARCHAR(20), ---- PENDING, SUCCESS, FAILED, CANCELLED, EXPIRED
+    reference_number VARCHAR(50),
+    description varchar(256),
+    UNIQUE(booking_id),
+    UNIQUE(payment_number, payment_method),
+    FOREIGN KEY (booking_id) REFERENCES booking(id)
+);
+
+CREATE TABLE payment_detail (
+    id BIGSERIAL PRIMARY KEY,
+    payment_id BIGINT,
+    type VARCHAR(20), -- BASE, DISCOUNT, ADMIN_FEE, TAX, OTHERS
+    description TEXT,
+    amount NUMERIC(10,2),
+    FOREIGN KEY (payment_id) REFERENCES payment(id)
 );
