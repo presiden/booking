@@ -103,27 +103,27 @@ INSERT INTO theater_room (name, code, theater_id, is_active) VALUES
 ('Room 2 - TH20', 'R040', 20, true);
 
 -- Insert 20 data ke theater_address (1 per teater)
-INSERT INTO theater_address (name, country_id, province_id, city_id, address_line, theater_id, is_active) VALUES
-('Addr TH01', 1, 1, 1, 'Jl. Pahlawan No.1, Jaksel', 1, true),
-('Addr TH02', 1, 1, 2, 'Jl. Merdeka No.2, Jakut', 2, true),
-('Addr TH03', 1, 2, 3, 'Jl. A. Yani No.3, Serang', 3, true),
-('Addr TH04', 1, 2, 4, 'Jl. Raya Serpong No.4, Tangerang', 4, true),
-('Addr TH05', 1, 3, 5, 'Jl. Braga No.5, Bandung', 5, true),
-('Addr TH06', 1, 3, 6, 'Jl. Kalimalang No.6, Bekasi', 6, true),
-('Addr TH07', 1, 4, 7, 'Jl. Pandanaran No.7, Semarang', 7, true),
-('Addr TH08', 1, 4, 8, 'Jl. Slamet Riyadi No.8, Solo', 8, true),
-('Addr TH09', 1, 5, 9, 'Jl. Darmo No.9, Surabaya', 9, true),
-('Addr TH10', 1, 5, 10, 'Jl. Ijen No.10, Malang', 10, true),
-('Addr TH11', 1, 1, 1, 'Jl. Cinema XXI A, Jaksel', 11, true),
-('Addr TH12', 1, 1, 2, 'Jl. Cinema XXI B, Jakut', 12, true),
-('Addr TH13', 1, 3, 6, 'Jl. Cinema XXI C, Bekasi', 13, true),
-('Addr TH14', 1, 5, 9, 'Jl. IMAX A, Surabaya', 14, true),
-('Addr TH15', 1, 5, 10, 'Jl. IMAX B, Malang', 15, true),
-('Addr TH16', 1, 4, 7, 'Jl. IMAX C, Semarang', 16, true),
-('Addr TH17', 1, 3, 5, 'Jl. Platinum A, Bandung', 17, true),
-('Addr TH18', 1, 2, 4, 'Jl. Platinum B, Tangerang', 18, true),
-('Addr TH19', 1, 2, 3, 'Jl. CGV A, Serang', 19, true),
-('Addr TH20', 1, 1, 1, 'Jl. CGV B, Jaksel', 20, true);
+INSERT INTO theater_address (name, city_id, address_line, theater_id, is_active) VALUES
+('Addr TH01', 1, 'Jl. Pahlawan No.1, Jaksel', 1, true),
+('Addr TH02', 2, 'Jl. Merdeka No.2, Jakut', 2, true),
+('Addr TH03', 3, 'Jl. A. Yani No.3, Serang', 3, true),
+('Addr TH04', 4, 'Jl. Raya Serpong No.4, Tangerang', 4, true),
+('Addr TH05', 5, 'Jl. Braga No.5, Bandung', 5, true),
+('Addr TH06', 6, 'Jl. Kalimalang No.6, Bekasi', 6, true),
+('Addr TH07', 7, 'Jl. Pandanaran No.7, Semarang', 7, true),
+('Addr TH08', 8, 'Jl. Slamet Riyadi No.8, Solo', 8, true),
+('Addr TH09', 9, 'Jl. Darmo No.9, Surabaya', 9, true),
+('Addr TH10', 10, 'Jl. Ijen No.10, Malang', 10, true),
+('Addr TH11', 1, 'Jl. Cinema XXI A, Jaksel', 11, true),
+('Addr TH12', 2, 'Jl. Cinema XXI B, Jakut', 12, true),
+('Addr TH13', 6, 'Jl. Cinema XXI C, Bekasi', 13, true),
+('Addr TH14', 9, 'Jl. IMAX A, Surabaya', 14, true),
+('Addr TH15', 10, 'Jl. IMAX B, Malang', 15, true),
+('Addr TH16', 7, 'Jl. IMAX C, Semarang', 16, true),
+('Addr TH17', 5, 'Jl. Platinum A, Bandung', 17, true),
+('Addr TH18', 4, 'Jl. Platinum B, Tangerang', 18, true),
+('Addr TH19', 3, 'Jl. CGV A, Serang', 19, true),
+('Addr TH20', 1, 'Jl. CGV B, Jaksel', 20, true);
 
 -- Insert Users
 
@@ -229,65 +229,65 @@ VALUES ('user20', 'User 20', 'user20@example.com', '081234567820', 'hashed_passw
 
 -- Insert Users Address
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 1', 1, 2, 2, 'Street 1 No.1', 1, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 1', 2, 'Street 1 No.1', 1, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 2', 1, 3, 3, 'Street 2 No.2', 2, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 2', 3, 'Street 2 No.2', 2, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 3', 1, 4, 4, 'Street 3 No.3', 3, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 3', 4, 'Street 3 No.3', 3, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 4', 1, 5, 5, 'Street 4 No.4', 4, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 4', 5, 'Street 4 No.4', 4, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 5', 1, 1, 6, 'Street 5 No.5', 5, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 5', 6, 'Street 5 No.5', 5, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 6', 1, 2, 7, 'Street 6 No.6', 6, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 6', 7, 'Street 6 No.6', 6, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 7', 1, 3, 8, 'Street 7 No.7', 7, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 7', 8, 'Street 7 No.7', 7, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 8', 1, 4, 9, 'Street 8 No.8', 8, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 8', 9, 'Street 8 No.8', 8, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 9', 1, 5, 10, 'Street 9 No.9', 9, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 9', 10, 'Street 9 No.9', 9, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 10', 1, 1, 1, 'Street 10 No.10', 10, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 10', 1, 'Street 10 No.10', 10, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 11', 1, 2, 2, 'Street 11 No.11', 11, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 11', 2, 'Street 11 No.11', 11, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 12', 1, 3, 3, 'Street 12 No.12', 12, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 12', 3, 'Street 12 No.12', 12, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 13', 1, 4, 4, 'Street 13 No.13', 13, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 13', 4, 'Street 13 No.13', 13, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 14', 1, 5, 5, 'Street 14 No.14', 14, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 14', 5, 'Street 14 No.14', 14, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 15', 1, 1, 6, 'Street 15 No.15', 15, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 15', 6, 'Street 15 No.15', 15, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 16', 1, 2, 7, 'Street 16 No.16', 16, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 16', 7, 'Street 16 No.16', 16, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 17', 1, 3, 8, 'Street 17 No.17', 17, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 17', 8, 'Street 17 No.17', 17, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 18', 1, 4, 9, 'Street 18 No.18', 18, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 18', 9, 'Street 18 No.18', 18, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 19', 1, 5, 10, 'Street 19 No.19', 19, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 19', 10, 'Street 19 No.19', 19, true);
 
-INSERT INTO users_address (name, country_id, province_id, city_id, address_line, users_id, is_active)
-VALUES ('Address 20', 1, 1, 1, 'Street 20 No.20', 20, true);
+INSERT INTO users_address (name, city_id, address_line, users_id, is_active)
+VALUES ('Address 20', 1, 'Street 20 No.20', 20, true);
 
 -- Insert Languages
 INSERT INTO languages (name, code, is_active) VALUES ('Bahasa Indonesia', 'ID', true);
@@ -297,396 +297,86 @@ INSERT INTO languages (name, code, is_active) VALUES ('French', 'FR', true);
 INSERT INTO languages (name, code, is_active) VALUES ('Japanese', 'JP', true);
 -- Insert Films
 
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 1', 'Description for Film 1', 2, 91, '/images/film1.jpg', '/trailers/film1.mp4', 
-        '2023-01-02 00:00:00', 7.2, true);
+-- Insert 20 films
+INSERT INTO film (id, title, description, languages_id, duration, image_path, trailer_path, release_date, rating, is_active) VALUES
+  (1, 'Edge of Tomorrow', 'Sci-fi action thriller.', 1, INTERVAL '1 hour 50 minutes', 'img1.jpg', 'trailer1.mp4', NOW(), 'D', TRUE),
+  (2, 'Spirited Away', 'Japanese fantasy animation.', 3, INTERVAL '2 hours 5 minutes', 'img2.jpg', 'trailer2.mp4', NOW(), 'BO', TRUE),
+  (3, 'Parasite', 'Thrilling social drama.', 2, INTERVAL '2 hours 12 minutes', 'img3.jpg', 'trailer3.mp4', NOW(), 'R', TRUE),
+  (4, 'Interstellar', 'Epic space exploration.', 1, INTERVAL '2 hours 49 minutes', 'img4.jpg', 'trailer4.mp4', NOW(), 'D', TRUE),
+  (5, 'Joker', 'Psychological thriller.', 1, INTERVAL '2 hours 2 minutes', 'img5.jpg', 'trailer5.mp4', NOW(), 'R', TRUE),
+  (6, 'Avengers: Endgame', 'Superhero finale.', 1, INTERVAL '3 hours 2 minutes', 'img6.jpg', 'trailer6.mp4', NOW(), 'D', TRUE),
+  (7, 'The Godfather', 'Crime family epic.', 1, INTERVAL '2 hours 55 minutes', 'img7.jpg', 'trailer7.mp4', NOW(), 'R', TRUE),
+  (8, 'The Dark Knight', 'Batman vs Joker.', 1, INTERVAL '2 hours 32 minutes', 'img8.jpg', 'trailer8.mp4', NOW(), 'D', TRUE),
+  (9, 'La La Land', 'Musical romance.', 4, INTERVAL '2 hours 8 minutes', 'img9.jpg', 'trailer9.mp4', NOW(), 'D', TRUE),
+  (10, 'Inception', 'Dream within dreams.', 1, INTERVAL '2 hours 28 minutes', 'img10.jpg', 'trailer10.mp4', NOW(), 'D', TRUE),
+  (11, 'Soul', 'Animated jazz journey.', 1, INTERVAL '1 hour 40 minutes', 'img11.jpg', 'trailer11.mp4', NOW(), 'BO', TRUE),
+  (12, 'Coco', 'Day of the Dead adventure.', 5, INTERVAL '1 hour 45 minutes', 'img12.jpg', 'trailer12.mp4', NOW(), 'BO', TRUE),
+  (13, 'Your Name', 'Body-swapping teens.', 3, INTERVAL '1 hour 46 minutes', 'img13.jpg', 'trailer13.mp4', NOW(), 'BO', TRUE),
+  (14, 'Dune', 'Sci-fi desert saga.', 1, INTERVAL '2 hours 35 minutes', 'img14.jpg', 'trailer14.mp4', NOW(), 'D', TRUE),
+  (15, 'Titanic', 'Epic romance disaster.', 1, INTERVAL '3 hours 14 minutes', 'img15.jpg', 'trailer15.mp4', NOW(), 'D', TRUE),
+  (16, 'Get Out', 'Psychological horror.', 1, INTERVAL '1 hour 44 minutes', 'img16.jpg', 'trailer16.mp4', NOW(), 'R', TRUE),
+  (17, 'Whiplash', 'Intense jazz drama.', 1, INTERVAL '1 hour 47 minutes', 'img17.jpg', 'trailer17.mp4', NOW(), 'R', TRUE),
+  (18, 'The Matrix', 'Virtual reality rebellion.', 1, INTERVAL '2 hours 16 minutes', 'img18.jpg', 'trailer18.mp4', NOW(), 'R', TRUE),
+  (19, 'Inside Out', 'Emotions adventure.', 1, INTERVAL '1 hour 35 minutes', 'img19.jpg', 'trailer19.mp4', NOW(), 'BO', TRUE),
+  (20, 'The Notebook', 'Romantic drama.', 2, INTERVAL '2 hours 3 minutes', 'img20.jpg', 'trailer20.mp4', NOW(), 'D', TRUE);
 
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 2', 'Description for Film 2', 3, 92, '/images/film2.jpg', '/trailers/film2.mp4', 
-        '2023-01-03 00:00:00', 5.95, true);
+-- Link each film with genres and subtitles (for simplicity, each film gets 2 genres and 2 subtitles)
+INSERT INTO film_genre (film_id, genre_id) VALUES
+  (1,1),(1,5),(2,2),(2,3),(3,2),(3,4),(4,1),(4,5),(5,2),(5,4),
+  (6,1),(6,5),(7,2),(7,1),(8,1),(8,4),(9,2),(9,3),(10,1),(10,5),
+  (11,3),(11,2),(12,3),(12,5),(13,3),(13,5),(14,1),(14,5),(15,2),(15,3),
+  (16,4),(16,2),(17,2),(17,3),(18,1),(18,5),(19,3),(19,5),(20,2),(20,3);
 
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 3', 'Description for Film 3', 4, 93, '/images/film3.jpg', '/trailers/film3.mp4', 
-        '2023-01-04 00:00:00', 7.12, true);
+INSERT INTO film_subtitle (film_id, subtitle_id) VALUES
+  (1,2),(1,3),(2,1),(2,5),(3,1),(3,4),(4,2),(4,3),(5,3),(5,5),
+  (6,1),(6,4),(7,2),(7,5),(8,1),(8,3),(9,2),(9,4),(10,1),(10,5),
+  (11,3),(11,5),(12,1),(12,2),(13,1),(13,5),(14,1),(14,2),(15,3),(15,4),
+  (16,1),(16,2),(17,3),(17,4),(18,2),(18,5),(19,1),(19,3),(20,4),(20,5);
 
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 4', 'Description for Film 4', 5, 94, '/images/film4.jpg', '/trailers/film4.mp4', 
-        '2023-01-05 00:00:00', 4.88, true);
+-- Insert 30 show schedules within 5 days, with no overlaps per room per date
+INSERT INTO shows ("date", start_time, end_time, film_id, theater_room_id, price, is_active) VALUES
+  ('2025-05-17', '09:00', '11:00', 1, 1, 45000, TRUE),
+  ('2025-05-17', '12:30', '14:30', 2, 1, 45000, TRUE),
+  ('2025-05-17', '09:00', '11:50', 3, 2, 50000, TRUE),
+  ('2025-05-17', '13:00', '15:30', 4, 2, 55000, TRUE),
+  ('2025-05-17', '09:00', '11:40', 5, 3, 48000, TRUE),
+  ('2025-05-17', '13:00', '15:40', 6, 3, 55000, TRUE),
 
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 5', 'Description for Film 5', 1, 95, '/images/film5.jpg', '/trailers/film5.mp4', 
-        '2023-01-06 00:00:00', 6.9, true);
+  ('2025-05-18', '09:00', '11:40', 1, 1, 48000, TRUE),
+  ('2025-05-18', '13:00', '15:20', 2, 1, 52000, TRUE),
+  ('2025-05-18', '09:00', '11:30', 3, 2, 45000, TRUE),
+  ('2025-05-18', '13:00', '15:40', 4, 2, 56000, TRUE),
+  ('2025-05-18', '09:00', '10:40', 5, 3, 40000, TRUE),
+  ('2025-05-18', '12:00', '14:00', 6, 3, 42000, TRUE),
 
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 6', 'Description for Film 6', 2, 96, '/images/film6.jpg', '/trailers/film6.mp4', 
-        '2023-01-07 00:00:00', 9.22, true);
+  ('2025-05-19', '09:00', '10:50', 6, 1, 43000, TRUE),
+  ('2025-05-19', '12:00', '14:30', 5, 1, 53000, TRUE),
+  ('2025-05-19', '09:00', '11:30', 4, 2, 54000, TRUE),
+  ('2025-05-19', '13:00', '15:00', 3, 2, 49000, TRUE),
+  ('2025-05-19', '09:00', '10:50', 2, 3, 42000, TRUE),
+  ('2025-05-19', '12:00', '14:20', 1, 3, 53000, TRUE),
 
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 7', 'Description for Film 7', 3, 97, '/images/film7.jpg', '/trailers/film7.mp4', 
-        '2023-01-08 00:00:00', 4.36, true);
+  ('2025-05-20', '09:00', '10:50', 6, 1, 41000, TRUE),
+  ('2025-05-20', '12:00', '14:10', 5, 1, 47000, TRUE),
+  ('2025-05-20', '09:00', '11:30', 4, 2, 46000, TRUE),
+  ('2025-05-20', '13:00', '15:00', 3, 2, 45000, TRUE),
+  ('2025-05-20', '09:00', '10:40', 2, 3, 40000, TRUE),
+  ('2025-05-20', '12:00', '14:20', 1, 3, 52000, TRUE),
 
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 8', 'Description for Film 8', 4, 98, '/images/film8.jpg', '/trailers/film8.mp4', 
-        '2023-01-09 00:00:00', 6.14, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 9', 'Description for Film 9', 5, 99, '/images/film9.jpg', '/trailers/film9.mp4', 
-        '2023-01-10 00:00:00', 9.48, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 10', 'Description for Film 10', 1, 100, '/images/film10.jpg', '/trailers/film10.mp4', 
-        '2023-01-11 00:00:00', 7.83, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 11', 'Description for Film 11', 2, 101, '/images/film11.jpg', '/trailers/film11.mp4', 
-        '2023-01-12 00:00:00', 8.76, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 12', 'Description for Film 12', 3, 102, '/images/film12.jpg', '/trailers/film12.mp4', 
-        '2023-01-13 00:00:00', 9.23, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 13', 'Description for Film 13', 4, 103, '/images/film13.jpg', '/trailers/film13.mp4', 
-        '2023-01-14 00:00:00', 5.07, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 14', 'Description for Film 14', 5, 104, '/images/film14.jpg', '/trailers/film14.mp4', 
-        '2023-01-15 00:00:00', 6.38, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 15', 'Description for Film 15', 1, 105, '/images/film15.jpg', '/trailers/film15.mp4', 
-        '2023-01-16 00:00:00', 4.01, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 16', 'Description for Film 16', 2, 106, '/images/film16.jpg', '/trailers/film16.mp4', 
-        '2023-01-17 00:00:00', 8.11, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 17', 'Description for Film 17', 3, 107, '/images/film17.jpg', '/trailers/film17.mp4', 
-        '2023-01-18 00:00:00', 6.65, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 18', 'Description for Film 18', 4, 108, '/images/film18.jpg', '/trailers/film18.mp4', 
-        '2023-01-19 00:00:00', 7.25, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 19', 'Description for Film 19', 5, 109, '/images/film19.jpg', '/trailers/film19.mp4', 
-        '2023-01-20 00:00:00', 5.21, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 20', 'Description for Film 20', 1, 110, '/images/film20.jpg', '/trailers/film20.mp4', 
-        '2023-01-21 00:00:00', 4.91, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 21', 'Description for Film 21', 2, 111, '/images/film21.jpg', '/trailers/film21.mp4', 
-        '2023-01-22 00:00:00', 4.23, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 22', 'Description for Film 22', 3, 112, '/images/film22.jpg', '/trailers/film22.mp4', 
-        '2023-01-23 00:00:00', 4.83, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 23', 'Description for Film 23', 4, 113, '/images/film23.jpg', '/trailers/film23.mp4', 
-        '2023-01-24 00:00:00', 8.99, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 24', 'Description for Film 24', 5, 114, '/images/film24.jpg', '/trailers/film24.mp4', 
-        '2023-01-25 00:00:00', 5.51, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 25', 'Description for Film 25', 1, 115, '/images/film25.jpg', '/trailers/film25.mp4', 
-        '2023-01-26 00:00:00', 4.55, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 26', 'Description for Film 26', 2, 116, '/images/film26.jpg', '/trailers/film26.mp4', 
-        '2023-01-27 00:00:00', 8.43, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 27', 'Description for Film 27', 3, 117, '/images/film27.jpg', '/trailers/film27.mp4', 
-        '2023-01-28 00:00:00', 4.24, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 28', 'Description for Film 28', 4, 118, '/images/film28.jpg', '/trailers/film28.mp4', 
-        '2023-01-29 00:00:00', 7.84, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 29', 'Description for Film 29', 5, 119, '/images/film29.jpg', '/trailers/film29.mp4', 
-        '2023-01-30 00:00:00', 4.49, true);
-
-INSERT INTO film (title, description, languages_id, duration, image_path, trailer_path, release_date, rating_average, is_active)
-VALUES ('Film 30', 'Description for Film 30', 1, 120, '/images/film30.jpg', '/trailers/film30.mp4', 
-        '2023-01-31 00:00:00', 6.47, true);
-
--- Insert Film Genres
-INSERT INTO film_genre (film_id, genre_id) VALUES (1, 10);
-INSERT INTO film_genre (film_id, genre_id) VALUES (2, 1);
-INSERT INTO film_genre (film_id, genre_id) VALUES (2, 4);
-INSERT INTO film_genre (film_id, genre_id) VALUES (2, 5);
-INSERT INTO film_genre (film_id, genre_id) VALUES (3, 4);
-INSERT INTO film_genre (film_id, genre_id) VALUES (4, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (4, 6);
-INSERT INTO film_genre (film_id, genre_id) VALUES (5, 3);
-INSERT INTO film_genre (film_id, genre_id) VALUES (5, 4);
-INSERT INTO film_genre (film_id, genre_id) VALUES (5, 2);
-INSERT INTO film_genre (film_id, genre_id) VALUES (6, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (7, 2);
-INSERT INTO film_genre (film_id, genre_id) VALUES (7, 3);
-INSERT INTO film_genre (film_id, genre_id) VALUES (7, 1);
-INSERT INTO film_genre (film_id, genre_id) VALUES (8, 5);
-INSERT INTO film_genre (film_id, genre_id) VALUES (8, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (8, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (9, 6);
-INSERT INTO film_genre (film_id, genre_id) VALUES (9, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (9, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (10, 7);
-INSERT INTO film_genre (film_id, genre_id) VALUES (10, 3);
-INSERT INTO film_genre (film_id, genre_id) VALUES (10, 1);
-INSERT INTO film_genre (film_id, genre_id) VALUES (11, 1);
-INSERT INTO film_genre (film_id, genre_id) VALUES (11, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (12, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (13, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (13, 6);
-INSERT INTO film_genre (film_id, genre_id) VALUES (13, 5);
-INSERT INTO film_genre (film_id, genre_id) VALUES (14, 10);
-INSERT INTO film_genre (film_id, genre_id) VALUES (15, 5);
-INSERT INTO film_genre (film_id, genre_id) VALUES (15, 2);
-INSERT INTO film_genre (film_id, genre_id) VALUES (16, 6);
-INSERT INTO film_genre (film_id, genre_id) VALUES (16, 2);
-INSERT INTO film_genre (film_id, genre_id) VALUES (17, 6);
-INSERT INTO film_genre (film_id, genre_id) VALUES (17, 7);
-INSERT INTO film_genre (film_id, genre_id) VALUES (17, 4);
-INSERT INTO film_genre (film_id, genre_id) VALUES (18, 4);
-INSERT INTO film_genre (film_id, genre_id) VALUES (18, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (18, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (19, 2);
-INSERT INTO film_genre (film_id, genre_id) VALUES (19, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (20, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (20, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (20, 10);
-INSERT INTO film_genre (film_id, genre_id) VALUES (21, 7);
-INSERT INTO film_genre (film_id, genre_id) VALUES (21, 3);
-INSERT INTO film_genre (film_id, genre_id) VALUES (22, 10);
-INSERT INTO film_genre (film_id, genre_id) VALUES (23, 1);
-INSERT INTO film_genre (film_id, genre_id) VALUES (23, 5);
-INSERT INTO film_genre (film_id, genre_id) VALUES (23, 4);
-INSERT INTO film_genre (film_id, genre_id) VALUES (24, 3);
-INSERT INTO film_genre (film_id, genre_id) VALUES (24, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (24, 1);
-INSERT INTO film_genre (film_id, genre_id) VALUES (25, 3);
-INSERT INTO film_genre (film_id, genre_id) VALUES (26, 8);
-INSERT INTO film_genre (film_id, genre_id) VALUES (26, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (27, 7);
-INSERT INTO film_genre (film_id, genre_id) VALUES (27, 4);
-INSERT INTO film_genre (film_id, genre_id) VALUES (27, 6);
-INSERT INTO film_genre (film_id, genre_id) VALUES (28, 2);
-INSERT INTO film_genre (film_id, genre_id) VALUES (28, 6);
-INSERT INTO film_genre (film_id, genre_id) VALUES (28, 3);
-INSERT INTO film_genre (film_id, genre_id) VALUES (29, 3);
-INSERT INTO film_genre (film_id, genre_id) VALUES (30, 9);
-INSERT INTO film_genre (film_id, genre_id) VALUES (30, 2);
-INSERT INTO film_genre (film_id, genre_id) VALUES (30, 6);
-
--- Insert Film Subtitles
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (1, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (2, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (2, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (3, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (3, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (4, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (5, 4);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (6, 4);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (6, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (6, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (7, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (8, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (9, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (10, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (10, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (10, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (11, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (11, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (12, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (12, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (13, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (13, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (13, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (14, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (14, 4);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (15, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (15, 4);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (15, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (16, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (17, 4);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (18, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (19, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (19, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (19, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (20, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (20, 4);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (21, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (21, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (22, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (23, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (23, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (23, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (24, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (25, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (25, 4);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (25, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (26, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (26, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (26, 5);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (27, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (27, 2);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (27, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (28, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (28, 1);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (29, 4);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (30, 3);
-INSERT INTO film_subtitle (film_id, subtitle_id) VALUES (30, 1);
-
--- Insert Ratings
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 11, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 7, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 8, 7);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 1, 1);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 19, 2);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 18, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 17, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 6, 1);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 16, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 14, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 3, 4);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 4, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 10, 7);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 5, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (1, 2, 3);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 17, 1);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 6, 4);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 16, 7);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 14, 7);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 12, 5);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 18, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 4, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 9, 3);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 7, 4);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 8, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 3, 2);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 10, 5);
-INSERT INTO rating (film_id, users_id, value) VALUES (2, 15, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 14, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 5, 4);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 4, 1);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 3, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 11, 7);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 15, 2);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 7, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 18, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 8, 9);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 6, 5);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 17, 9);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 20, 1);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 16, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (3, 9, 9);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 11, 4);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 13, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 6, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 16, 9);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 2, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 3, 5);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 15, 4);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 19, 9);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 14, 9);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 10, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 20, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 5, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 17, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 12, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (4, 4, 3);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 3, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 10, 3);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 13, 2);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 17, 1);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 12, 4);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 4, 10);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 7, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 2, 8);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 20, 2);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 5, 9);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 6, 1);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 1, 9);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 9, 6);
-INSERT INTO rating (film_id, users_id, value) VALUES (5, 11, 1);
-
--- Insert Shows
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-02', '11:00:00', 2, 2, 35000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-03', '12:00:00', 3, 3, 40000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-04', '13:00:00', 4, 4, 45000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-05', '14:00:00', 5, 5, 50000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-06', '10:00:00', 6, 6, 30000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-07', '11:00:00', 7, 7, 35000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-08', '12:00:00', 8, 8, 40000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-09', '13:00:00', 9, 9, 45000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-10', '14:00:00', 10, 10, 50000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-01', '10:00:00', 1, 1, 30000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-02', '11:00:00', 2, 2, 35000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-03', '12:00:00', 3, 3, 40000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-04', '13:00:00', 4, 4, 45000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-05', '14:00:00', 5, 5, 50000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-06', '10:00:00', 6, 6, 30000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-07', '11:00:00', 7, 7, 35000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-08', '12:00:00', 8, 8, 40000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-09', '13:00:00', 9, 9, 45000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-10', '14:00:00', 10, 10, 50000, true);
-
-INSERT INTO shows (date, time, film_id, theater_room_id, price, is_active)
-VALUES ('2025-05-01', '10:00:00', 1, 1, 30000, true);
+  ('2025-05-21', '09:00', '11:10', 1, 1, 46000, TRUE),
+  ('2025-05-21', '13:00', '15:30', 2, 1, 53000, TRUE),
+  ('2025-05-21', '09:00', '11:50', 3, 2, 50000, TRUE),
+  ('2025-05-21', '13:00', '15:00', 4, 2, 49000, TRUE),
+  ('2025-05-21', '09:00', '10:40', 5, 3, 40000, TRUE),
+  ('2025-05-21', '12:00', '14:10', 6, 3, 52000, TRUE);
 
 -- Insert Bookings
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0001', 2, 2, '2025-05-01 12:01:00', 'AVAILABLE');
+VALUES ('BKG0001', 2, 2, '2025-05-01 12:01:00', 'SELECTED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0002', 3, 3, '2025-05-01 12:02:00', 'AVAILABLE');
+VALUES ('BKG0002', 3, 3, '2025-05-01 12:02:00', 'SELECTED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0003', 4, 4, '2025-05-01 12:03:00', 'BOOKED');
@@ -719,7 +409,7 @@ INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0012', 3, 3, '2025-05-01 12:12:00', 'BOOKED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0013', 4, 4, '2025-05-01 12:13:00', 'AVAILABLE');
+VALUES ('BKG0013', 4, 4, '2025-05-01 12:13:00', 'SELECTED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0014', 5, 5, '2025-05-01 12:14:00', 'EXPIRED');
@@ -728,7 +418,7 @@ INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0015', 6, 6, '2025-05-01 12:15:00', 'CANCELLED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0016', 7, 7, '2025-05-01 12:16:00', 'IN_BOOKING');
+VALUES ('BKG0016', 7, 7, '2025-05-01 12:16:00', 'BOOKED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0017', 8, 8, '2025-05-01 12:17:00', 'CANCELLED');
@@ -737,7 +427,7 @@ INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0018', 9, 9, '2025-05-01 12:18:00', 'EXPIRED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0019', 10, 10, '2025-05-01 12:19:00', 'IN_BOOKING');
+VALUES ('BKG0019', 10, 10, '2025-05-01 12:19:00', 'BOOKED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0020', 1, 1, '2025-05-01 12:20:00', 'EXPIRED');
@@ -746,22 +436,22 @@ INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0021', 2, 2, '2025-05-01 12:21:00', 'EXPIRED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0022', 3, 3, '2025-05-01 12:22:00', 'AVAILABLE');
+VALUES ('BKG0022', 3, 3, '2025-05-01 12:22:00', 'SELECTED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0023', 4, 4, '2025-05-01 12:23:00', 'AVAILABLE');
+VALUES ('BKG0023', 4, 4, '2025-05-01 12:23:00', 'SELECTED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0024', 5, 5, '2025-05-01 12:24:00', 'AVAILABLE');
+VALUES ('BKG0024', 5, 5, '2025-05-01 12:24:00', 'SELECTED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0025', 6, 6, '2025-05-01 12:25:00', 'CANCELLED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0026', 7, 7, '2025-05-01 12:26:00', 'AVAILABLE');
+VALUES ('BKG0026', 7, 7, '2025-05-01 12:26:00', 'SELECTED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
-VALUES ('BKG0027', 8, 8, '2025-05-01 12:27:00', 'AVAILABLE');
+VALUES ('BKG0027', 8, 8, '2025-05-01 12:27:00', 'SELECTED');
 
 INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status)
 VALUES ('BKG0028', 9, 9, '2025-05-01 12:28:00', 'CANCELLED');
@@ -1509,7 +1199,7 @@ VALUES
 (2, 'ADMIN_FEE', 'Admin Charge', 3311);
 
 INSERT INTO payment (payment_number, booking_id, payment_method, payment_time, amount, status, reference_number)
-VALUES ('PAY1003', 3, 'Gopay', '2025-04-30 15:37:05', 90998, 'PENDING', 'FD72421C');
+VALUES ('PAY1003', 3, 'GOPAY', '2025-04-30 15:37:05', 90998, 'PENDING', 'FD72421C');
 
 INSERT INTO payment_detail (payment_id, type, description, amount)
 VALUES 
@@ -1527,7 +1217,7 @@ VALUES
 (4, 'ADMIN_FEE', 'Admin Charge', 6804);
 
 INSERT INTO payment (payment_number, booking_id, payment_method, payment_time, amount, status, reference_number)
-VALUES ('PAY1005', 5, 'Gopay', '2025-05-02 15:37:05', 98768, 'PENDING', '9F15E82A');
+VALUES ('PAY1005', 5, 'GOPAY', '2025-05-02 15:37:05', 98768, 'PENDING', '9F15E82A');
 
 INSERT INTO payment_detail (payment_id, type, description, amount)
 VALUES 
@@ -1545,7 +1235,7 @@ VALUES
 (6, 'ADMIN_FEE', 'Admin Charge', 6215);
 
 INSERT INTO payment (payment_number, booking_id, payment_method, payment_time, amount, status, reference_number)
-VALUES ('PAY1007', 7, 'Gopay', '2025-04-30 15:37:05', 196406, 'PENDING', '7F654FB4');
+VALUES ('PAY1007', 7, 'GOPAY', '2025-04-30 15:37:05', 196406, 'PENDING', '7F654FB4');
 
 INSERT INTO payment_detail (payment_id, type, description, amount)
 VALUES 
@@ -1572,7 +1262,7 @@ VALUES
 (9, 'ADMIN_FEE', 'Admin Charge', 7445);
 
 INSERT INTO payment (payment_number, booking_id, payment_method, payment_time, amount, status, reference_number)
-VALUES ('PAY1010', 10, 'Gopay', '2025-05-02 15:37:05', 97032, 'PENDING', 'F1C58180');
+VALUES ('PAY1010', 10, 'GOPAY', '2025-05-02 15:37:05', 97032, 'PENDING', 'F1C58180');
 
 INSERT INTO payment_detail (payment_id, type, description, amount)
 VALUES 
@@ -1644,7 +1334,7 @@ VALUES
 (17, 'ADMIN_FEE', 'Admin Charge', 9561);
 
 INSERT INTO payment (payment_number, booking_id, payment_method, payment_time, amount, status, reference_number)
-VALUES ('PAY1018', 18, 'Gopay', '2025-05-06 15:37:05', 121006, 'PENDING', 'B413AF8F');
+VALUES ('PAY1018', 18, 'GOPAY', '2025-05-06 15:37:05', 121006, 'PENDING', 'B413AF8F');
 
 INSERT INTO payment_detail (payment_id, type, description, amount)
 VALUES 
@@ -1653,7 +1343,7 @@ VALUES
 (18, 'ADMIN_FEE', 'Admin Charge', 6051);
 
 INSERT INTO payment (payment_number, booking_id, payment_method, payment_time, amount, status, reference_number)
-VALUES ('PAY1019', 19, 'Gopay', '2025-04-27 15:37:05', 70820, 'SUCCESS', '0F171791');
+VALUES ('PAY1019', 19, 'GOPAY', '2025-04-27 15:37:05', 70820, 'SUCCESS', '0F171791');
 
 INSERT INTO payment_detail (payment_id, type, description, amount)
 VALUES 

@@ -2,6 +2,8 @@ package com.okestudio.booking.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import com.okestudio.booking.enums.BookingStatus;
 
 import jakarta.persistence.Column;
@@ -23,23 +25,25 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "booking")
-public class Booking extends BaseEntity {
+@SQLRestriction("deleted IS FALSE")
+public class Booking extends Auditable {
 
     @Column(name = "booking_number", length = 20, nullable = false, unique = true)
     private String bookingNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id")
+    @JoinColumn(name = "users_id", nullable = false)
     private Users users;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shows_id")
+    @JoinColumn(name = "shows_id", nullable = false)
     private Shows shows;
 
-    @Column(name = "booking_time")
+    @Column(name = "booking_time", nullable = false)
     private LocalDateTime bookingTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20, nullable = false)
     private BookingStatus status;
+    
 }

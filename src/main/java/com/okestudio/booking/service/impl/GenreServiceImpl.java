@@ -39,7 +39,7 @@ public class GenreServiceImpl implements GenreService{
         Genre genre = findGenreOrThrow(id);
         genre.setName(genreDto.getName());
         genre.setDescription(genreDto.getDescription());
-        genre.setIsActive(genreDto.getIsActive());
+        genre.setActive(genreDto.getIsActive());
         Genre updatedGenre = genreRepository.save(genre);
 
         return GenreMapper.INSTANCE.toDto(updatedGenre);
@@ -49,11 +49,11 @@ public class GenreServiceImpl implements GenreService{
     @Override
     public void updateStatus(Long id, boolean active) {
         Genre genre = findGenreOrThrow(id);
-        if(genre.getIsActive() == active) {
+        if(genre.isActive() == active) {
             return;
         }
 
-        genre.setIsActive(active);
+        genre.setActive(active);
         
         return;
     }

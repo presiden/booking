@@ -9,6 +9,8 @@ import com.okestudio.booking.dto.GenreResponseDto;
 import com.okestudio.booking.dto.GenreUpdateRequestDto;
 import com.okestudio.booking.service.GenreService;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,7 @@ public class GenreController {
     }
 
     @PostMapping
-    public ResponseEntity<GenreResponseDto> createGenre(@RequestBody GenreCreateRequestDto dto) { 
+    public ResponseEntity<GenreResponseDto> createGenre(@RequestBody @Valid GenreCreateRequestDto dto) { 
         GenreResponseDto createdGenre = genreService.create(dto);
         return ResponseEntity.status(201).body(createdGenre);
     }

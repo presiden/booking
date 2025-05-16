@@ -26,7 +26,7 @@ public class GenreRepositoryTest {
         // GenreRepository genreRepository = Mockito.mock(GenreRepository.class);
         // Mockito.when(genreRepository.findAll()).thenReturn(List.of(new Genre("Action"), new Genre("Drama")));
         List<Genre> genres = genreRepository.findAll();
-        Assertions.assertEquals(2, genres.size());
+        Assertions.assertEquals(10, genres.size());
         // Assertions.assertEquals("Action", genres.get(0).getName());      
         
     }

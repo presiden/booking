@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import com.okestudio.booking.enums.PaymentMethod;
 import com.okestudio.booking.enums.PaymentStatus;
 
@@ -28,33 +30,34 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "payment")
-public class Payment extends BaseEntity {
+@SQLRestriction("deleted IS FALSE")
+public class Payment extends Auditable {
 
     @Column(name = "payment_number", length = 20, nullable = false, unique = true)
     private String paymentNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "booking_id")
+    @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
-    @Column(name = "payment_time")
+    @Column(name = "payment_time", nullable = false)
     private LocalDateTime paymentTime;
 
-    @Column(name = "amount")
-    private BigDecimal amount;
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private PaymentStatus status;
 
-    @Column(name = "reference_number")
+    @Column(name = "reference_number", nullable = false)
     private String transactionReference;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = true, length = 512)
     private String description;
 
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)

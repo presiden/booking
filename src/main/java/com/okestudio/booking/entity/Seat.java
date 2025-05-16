@@ -20,19 +20,19 @@ import lombok.Setter;
 public class Seat extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theater_room_id")
+    @JoinColumn(name = "theater_room_id", nullable = false)
     private TheaterRoom theaterRoom;
 
-    @Column(name = "row_label", length = 5)
+    @Column(name = "row_label", nullable = false, length = 5)
     private String rowLabel;
 
-    @Column(name = "seat_number")
+    @Column(name = "seat_number", nullable = false)
     private Integer seatNumber;
 
-    @Column(name = "seat_type", length = 20)
+    @Column(name = "seat_type", nullable = false, length = 20)
     private String seatType;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
     
 }

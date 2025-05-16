@@ -19,29 +19,29 @@ import lombok.Setter;
 @Table(name = "users_address")
 public class UsersAddress extends BaseEntity {
 
-    @Column(length = 50, nullable = false)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")
-    private Country country;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "country_id")
+    // private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "province_id")
-    private Province province;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "province_id")
+    // private Province province;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private City city;
 
-    @Column(name = "address_line", length = 256)
+    @Column(name = "address_line", length = 512)
     private String addressLine;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id")
+    @JoinColumn(name = "users_id", nullable = false)
     private Users users;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 
 }

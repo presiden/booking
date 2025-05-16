@@ -29,6 +29,7 @@ public class Person extends BaseEntity {
     @Builder.Default
     private Boolean star = Boolean.FALSE;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Builder.Default
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 }

@@ -1,8 +1,11 @@
 package com.okestudio.booking.entity;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import com.okestudio.booking.enums.Rating;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,8 +27,10 @@ import lombok.Setter;
 @Table(name = "film")
 public class Film extends BaseEntity {
 
+    @Column(name = "title", nullable = false, length = 50)
     private String title;
 
+    @Column(name = "description", nullable = true, length = 1024)
     private String description;
 
     @ManyToMany
@@ -37,7 +42,7 @@ public class Film extends BaseEntity {
     private Set<Genre> genre;
 
     @ManyToOne
-    @JoinColumn(name = "languages_id")
+    @JoinColumn(name = "languages_id", nullable = false)
     private Languages languages;
 
     @ManyToMany
@@ -48,19 +53,24 @@ public class Film extends BaseEntity {
     )
     private Set<Languages> subtitle;
 
-    private Integer duration;
+    @Column(name = "duration", nullable = false)
+    private Duration duration;
 
     @ManyToOne
-    @JoinColumn(name = "director_id")
+    @JoinColumn(name = "director_id", nullable = true)
     private Person director;
 
+    @Column(name = "image_path", nullable = true, length = 512)
     private String imagePath;
 
+    @Column(name = "trailer_path", nullable = true, length = 512)
     private String trailerPath;
 
+    @Column(name = "release_date", nullable = true)
     private LocalDateTime releaseDate;
 
-    private BigDecimal ratingAverage;
+    @Column(name = "rating", nullable = true)
+    private Rating rating;
 
     @ManyToMany
     @JoinTable(
@@ -78,7 +88,7 @@ public class Film extends BaseEntity {
     )
     private Set<Person> stars;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 
 }

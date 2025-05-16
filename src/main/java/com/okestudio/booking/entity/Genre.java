@@ -22,8 +22,8 @@ public class Genre extends BaseEntity{
     @Column(name = "description", nullable = false, length = 500)
     private String description;
 
-    @Column(name = "is_active")
-    private Boolean isActive = Boolean.TRUE;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 
     @Override
     public String toString() {

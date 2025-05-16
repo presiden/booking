@@ -20,27 +20,27 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable extends BaseEntity {
 
-    @Column(name = "secure_id", unique = true)
-    protected String secureId;
+    // @Column(name = "secure_id", unique = true)
+    // protected String secureId;
 
-    @CreatedBy
-    @Column(name = "created_by", updatable = false)
-    protected String createdBy;
+    // @CreatedBy
+    // @Column(name = "created_by", updatable = false)
+    // protected String createdBy;
 
-    @CreatedDate
-    @Column(name = "created_date", updatable = false)
-    protected LocalDateTime createdDate;
+    // @CreatedDate
+    // @Column(name = "created_date", updatable = false)
+    // protected LocalDateTime createdDate;
 
-    @LastModifiedBy
-    @Column(name = "modified_by")
-    protected String modifiedBy;
+    // @LastModifiedBy
+    // @Column(name = "modified_by")
+    // protected String modifiedBy;
 
-    @LastModifiedDate
-    @Column(name = "modified_date")
-    protected LocalDateTime modifiedDate;
+    // @LastModifiedDate
+    // @Column(name = "modified_date")
+    // protected LocalDateTime modifiedDate;
 
-    @Column(name = "deleted")
-    protected Boolean deleted = false;
+    @Column(name = "deleted", nullable = false)
+    protected boolean deleted = false;
 
     @Column(name = "deleted_by")
     protected String deletedBy;

@@ -21,12 +21,14 @@ import lombok.Setter;
 @Table(name = "city")
 public class City extends BaseEntity {
 
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "province_id")
+    @JoinColumn(name = "province_id", nullable = false)
     private Province province;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
+    
 }

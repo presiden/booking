@@ -22,6 +22,6 @@ public class Languages extends BaseEntity {
     @Column(length = 5, nullable = false)
     private String code;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 }

@@ -14,11 +14,11 @@ public interface GenreMapper {
 
     GenreMapper INSTANCE = Mappers.getMapper(GenreMapper.class);
 
-    GenreResponseDto toDto(Genre theater);
+    GenreResponseDto toDto(Genre genre);
     
     Genre toEntity(GenreCreateRequestDto genreDto);
 
-    List<GenreResponseDto> toDto(List<Genre> theater);
+    List<GenreResponseDto> toDto(List<Genre> genres);
 
     List<Genre> toEntity(List<GenreResponseDto> genreDto);
 

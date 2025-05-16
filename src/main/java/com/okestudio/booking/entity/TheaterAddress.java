@@ -22,26 +22,26 @@ public class TheaterAddress extends BaseEntity {
     @Column(length = 20, nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")
-    private Country country;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "country_id")
+    // private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "province_id")
-    private Province province;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "province_id")
+    // private Province province;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private City city;
 
-    @Column(name = "address_line", length = 256)
+    @Column(name = "address_line", nullable = true, length = 256)
     private String addressLine;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theater_id")
     private Theater theater;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 
 }

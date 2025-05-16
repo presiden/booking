@@ -31,4 +31,5 @@ public class BookingSeat {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seat_id")
     private Seat seat;
+    
 }

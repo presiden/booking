@@ -2,6 +2,8 @@ package com.okestudio.booking.entity;
 
 import java.math.BigDecimal;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import com.okestudio.booking.enums.PaymentAmountType;
 
 import jakarta.persistence.Column;
@@ -23,7 +25,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "payment_detail")
-public class PaymentDetail extends BaseEntity {
+@SQLRestriction("deleted IS FALSE")
+public class PaymentDetail extends Auditable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id", nullable = false, unique = true)

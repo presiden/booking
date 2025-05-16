@@ -1,7 +1,6 @@
 package com.okestudio.booking.dto;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -9,7 +8,7 @@ import lombok.Data;
 public class FilmSummaryResponseDto {
     Long id;
     String title;
-    BigDecimal ratingAverage;
-    LocalDateTime releaseDate;
+    String rating;
+    LocalDate releaseDate;
     String imagePath;
 }

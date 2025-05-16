@@ -25,18 +25,21 @@ public class Shows extends BaseEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "time", nullable = false)
-    private LocalTime time;
+    @Column(name = "start_time", nullable = false)
+    private LocalTime startTime;
+
+    @Column(name = "end_time", nullable = false)
+    private LocalTime endTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "film_id")
+    @JoinColumn(name = "film_id", nullable = false)
     private Film film;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theater_room_id")
+    @JoinColumn(name = "theater_room_id", nullable = false)
     private TheaterRoom theaterRoom;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
     
 }

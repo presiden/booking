@@ -13,8 +13,6 @@ public class FilmRequestDto {
     private List<Long> genreIds;
     private Integer durationMin;
     private Integer durationMax;
-    private BigDecimal ratingMin;
-    private BigDecimal ratingMax;
     private LocalDateTime releaseStart;
     private LocalDateTime releaseEnd;
 

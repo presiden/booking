@@ -18,10 +18,13 @@ import lombok.Setter;
 @Table(name = "country")
 public class Country extends BaseEntity {
 
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Column(name = "code", nullable = false, unique = true)
     private String code;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
+    
 }

@@ -24,15 +24,15 @@ public class Theater extends BaseEntity {
     @Column(name = "code", nullable = false, length = 5)
     private String code;
 
-    @Column(name = "email", nullable = false, length = 50)
+    @Column(name = "email", nullable = true, length = 50)
     private String email;
 
-    @Column(name = "phone", nullable = false, length = 20)
+    @Column(name = "phone", nullable = true, length = 20)
     private String phone;
 
     @Column(name = "image_path", nullable = true, length = 512)
     private String imagePath;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 }
