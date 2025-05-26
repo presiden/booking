@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS booking (
 CREATE TABLE IF NOT EXISTS booking_history (
     id BIGSERIAL PRIMARY KEY,
     booking_id BIGINT NOT NULL,
-    status booking_status NOT NULL,
+    status VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     expires_at TIMESTAMP, -- opsional, hanya relevan jika status SELECTED
     deleted BOOL NOT NULL DEFAULT FALSE,

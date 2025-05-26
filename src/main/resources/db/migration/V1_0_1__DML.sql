@@ -333,851 +333,877 @@ INSERT INTO film_subtitle (film_id, subtitle_id) VALUES
   (11,3),(11,5),(12,1),(12,2),(13,1),(13,5),(14,1),(14,2),(15,3),(15,4),
   (16,1),(16,2),(17,3),(17,4),(18,2),(18,5),(19,1),(19,3),(20,4),(20,5);
 
--- Insert 30 show schedules within 5 days, with no overlaps per room per date
--- INSERT INTO shows ("date", start_time, end_time, film_id, theater_room_id, price, is_active) VALUES
---   ('2025-05-17', '09:00', '11:00', 1, 1, 45000, TRUE),
---   ('2025-05-17', '12:30', '14:30', 2, 1, 45000, TRUE),
---   ('2025-05-17', '09:00', '11:50', 3, 2, 50000, TRUE),
---   ('2025-05-17', '13:00', '15:30', 4, 2, 55000, TRUE),
---   ('2025-05-17', '09:00', '11:40', 5, 3, 48000, TRUE),
---   ('2025-05-17', '13:00', '15:40', 6, 3, 55000, TRUE),
+DO $$
+DECLARE
+    v_inserted_count INTEGER := 0;
+    v_max_shows INTEGER := 50;
+    v_attempt_limit INTEGER := 500;
+    v_attempt INTEGER := 0;
+
+    v_show_date DATE;
+    v_start_time TIME;
+    v_end_time TIME;
+    v_duration INTERVAL;
+    v_film_id INTEGER;
+    v_theater_room_id INTEGER;
+    v_price INTEGER; -- Ubah dari NUMERIC(10,2)
+BEGIN
+    WHILE v_inserted_count < v_max_shows AND v_attempt < v_attempt_limit LOOP
+        -- Random tanggal 5 hari ke depan
+        v_show_date := CURRENT_DATE + (random() * 4)::int;
+
+        -- Random jam mulai antara 08:00 - 21:00
+        v_start_time := time '08:00' + (interval '15 minutes' * floor(random() * 53));
+
+        -- Random durasi antara 90–180 menit
+        v_duration := (60 + floor(random() * 120)) * interval '1 minute';
+
+        v_end_time := v_start_time + v_duration;
+
+        -- Acak film dan ruangan
+        v_film_id := 1 + floor(random() * 6)::int;
+        v_theater_room_id := 1 + floor(random() * 4)::int;
+
+        -- Acak harga tiket antara 30.000 – 80.000
+        v_price := 30000 + (floor(random() * 51)::int * 1000); -- kelipatan 1000
+
+        -- Cek apakah overlap
+        IF NOT EXISTS (
+            SELECT 1 FROM shows
+            WHERE theater_room_id = v_theater_room_id
+              AND tsrange(
+                    ("date" + start_time)::timestamp,
+                    ("date" + end_time)::timestamp
+                  ) && tsrange(
+                    (v_show_date + v_start_time)::timestamp,
+                    (v_show_date + v_end_time)::timestamp
+                  )
+        ) THEN
+            INSERT INTO shows(
+                "date", start_time, end_time,
+                film_id, theater_room_id, price, is_active
+            ) VALUES (
+                v_show_date, v_start_time, v_end_time,
+                v_film_id, v_theater_room_id, v_price, TRUE
+            );
+            v_inserted_count := v_inserted_count + 1;
+        END IF;
 
---   ('2025-05-18', '09:00', '11:40', 1, 1, 48000, TRUE),
---   ('2025-05-18', '13:00', '15:20', 2, 1, 52000, TRUE),
---   ('2025-05-18', '09:00', '11:30', 3, 2, 45000, TRUE),
---   ('2025-05-18', '13:00', '15:40', 4, 2, 56000, TRUE),
---   ('2025-05-18', '09:00', '10:40', 5, 3, 40000, TRUE),
---   ('2025-05-18', '12:00', '14:00', 6, 3, 42000, TRUE),
+        v_attempt := v_attempt + 1;
+    END LOOP;
 
---   ('2025-05-19', '09:00', '10:50', 6, 1, 43000, TRUE),
---   ('2025-05-19', '12:00', '14:30', 5, 1, 53000, TRUE),
---   ('2025-05-19', '09:00', '11:30', 4, 2, 54000, TRUE),
---   ('2025-05-19', '13:00', '15:00', 3, 2, 49000, TRUE),
---   ('2025-05-19', '09:00', '10:50', 2, 3, 42000, TRUE),
---   ('2025-05-19', '12:00', '14:20', 1, 3, 53000, TRUE),
+    RAISE NOTICE 'Inserted % shows (attempts: %)', v_inserted_count, v_attempt;
+END
+$$;
 
---   ('2025-05-20', '09:00', '10:50', 6, 1, 41000, TRUE),
---   ('2025-05-20', '12:00', '14:10', 5, 1, 47000, TRUE),
---   ('2025-05-20', '09:00', '11:30', 4, 2, 46000, TRUE),
---   ('2025-05-20', '13:00', '15:00', 3, 2, 45000, TRUE),
---   ('2025-05-20', '09:00', '10:40', 2, 3, 40000, TRUE),
---   ('2025-05-20', '12:00', '14:20', 1, 3, 52000, TRUE),
+-- Insert Bookings
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0001', 2, 2, '2025-05-01 12:01:00', 'IN_PROGRESS', FALSE);
 
---   ('2025-05-21', '09:00', '11:10', 1, 1, 46000, TRUE),
---   ('2025-05-21', '13:00', '15:30', 2, 1, 53000, TRUE),
---   ('2025-05-21', '09:00', '11:50', 3, 2, 50000, TRUE),
---   ('2025-05-21', '13:00', '15:00', 4, 2, 49000, TRUE),
---   ('2025-05-21', '09:00', '10:40', 5, 3, 40000, TRUE),
---   ('2025-05-21', '12:00', '14:10', 6, 3, 52000, TRUE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0002', 3, 3, '2025-05-01 12:02:00', 'IN_PROGRESS', FALSE);
 
--- -- Insert Bookings
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0001', 2, 2, '2025-05-01 12:01:00', 'IN_PROGRESS', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0003', 4, 4, '2025-05-01 12:03:00', 'COMPLETED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0002', 3, 3, '2025-05-01 12:02:00', 'IN_PROGRESS', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0004', 5, 5, '2025-05-01 12:04:00', 'CANCELLED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0003', 4, 4, '2025-05-01 12:03:00', 'COMPLETED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0005', 6, 6, '2025-05-01 12:05:00', 'EXPIRED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0004', 5, 5, '2025-05-01 12:04:00', 'CANCELLED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0006', 7, 7, '2025-05-01 12:06:00', 'COMPLETED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0005', 6, 6, '2025-05-01 12:05:00', 'EXPIRED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0007', 8, 8, '2025-05-01 12:07:00', 'CANCELLED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0006', 7, 7, '2025-05-01 12:06:00', 'COMPLETED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0008', 9, 9, '2025-05-01 12:08:00', 'EXPIRED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0007', 8, 8, '2025-05-01 12:07:00', 'CANCELLED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0009', 10, 10, '2025-05-01 12:09:00', 'CANCELLED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0008', 9, 9, '2025-05-01 12:08:00', 'EXPIRED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0010', 1, 1, '2025-05-01 12:10:00', 'EXPIRED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0009', 10, 10, '2025-05-01 12:09:00', 'CANCELLED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0011', 2, 2, '2025-05-01 12:11:00', 'COMPLETED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0010', 1, 1, '2025-05-01 12:10:00', 'EXPIRED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0012', 3, 3, '2025-05-01 12:12:00', 'COMPLETED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0011', 2, 2, '2025-05-01 12:11:00', 'COMPLETED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0013', 4, 4, '2025-05-01 12:13:00', 'IN_PROGRESS', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0012', 3, 3, '2025-05-01 12:12:00', 'COMPLETED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0014', 5, 5, '2025-05-01 12:14:00', 'EXPIRED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0013', 4, 4, '2025-05-01 12:13:00', 'IN_PROGRESS', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0015', 6, 6, '2025-05-01 12:15:00', 'CANCELLED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0014', 5, 5, '2025-05-01 12:14:00', 'EXPIRED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0016', 7, 7, '2025-05-01 12:16:00', 'COMPLETED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0015', 6, 6, '2025-05-01 12:15:00', 'CANCELLED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0017', 8, 8, '2025-05-01 12:17:00', 'CANCELLED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0016', 7, 7, '2025-05-01 12:16:00', 'COMPLETED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0018', 9, 9, '2025-05-01 12:18:00', 'EXPIRED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0017', 8, 8, '2025-05-01 12:17:00', 'CANCELLED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0019', 10, 10, '2025-05-01 12:19:00', 'COMPLETED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0018', 9, 9, '2025-05-01 12:18:00', 'EXPIRED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0020', 1, 1, '2025-05-01 12:20:00', 'EXPIRED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0019', 10, 10, '2025-05-01 12:19:00', 'COMPLETED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0021', 2, 2, '2025-05-01 12:21:00', 'EXPIRED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0020', 1, 1, '2025-05-01 12:20:00', 'EXPIRED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0022', 3, 3, '2025-05-01 12:22:00', 'IN_PROGRESS', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0021', 2, 2, '2025-05-01 12:21:00', 'EXPIRED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0023', 4, 4, '2025-05-01 12:23:00', 'IN_PROGRESS', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0022', 3, 3, '2025-05-01 12:22:00', 'IN_PROGRESS', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0024', 5, 5, '2025-05-01 12:24:00', 'IN_PROGRESS', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0023', 4, 4, '2025-05-01 12:23:00', 'IN_PROGRESS', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0025', 6, 6, '2025-05-01 12:25:00', 'CANCELLED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0024', 5, 5, '2025-05-01 12:24:00', 'IN_PROGRESS', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0026', 7, 7, '2025-05-01 12:26:00', 'IN_PROGRESS', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0025', 6, 6, '2025-05-01 12:25:00', 'CANCELLED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0027', 8, 8, '2025-05-01 12:27:00', 'IN_PROGRESS', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0026', 7, 7, '2025-05-01 12:26:00', 'IN_PROGRESS', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0028', 9, 9, '2025-05-01 12:28:00', 'CANCELLED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0027', 8, 8, '2025-05-01 12:27:00', 'IN_PROGRESS', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0029', 10, 10, '2025-05-01 12:29:00', 'COMPLETED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0028', 9, 9, '2025-05-01 12:28:00', 'CANCELLED', FALSE);
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
+VALUES ('BKG0030', 1, 1, '2025-05-01 12:30:00', 'EXPIRED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0029', 10, 10, '2025-05-01 12:29:00', 'COMPLETED', FALSE);
 
--- INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status, deleted)
--- VALUES ('BKG0030', 1, 1, '2025-05-01 12:30:00', 'EXPIRED', FALSE);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 1, 'regular', 1, 0, 0.00, true);
 
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 2, 'regular', 2, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 1, 'regular', 1, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 3, 'regular', 3, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 2, 'regular', 2, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 4, 'regular', 4, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 3, 'regular', 3, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 5, 'regular', 5, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 4, 'regular', 4, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 6, 'regular', 6, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 5, 'regular', 5, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 7, 'regular', 7, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 6, 'regular', 6, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 8, 'regular', 8, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 7, 'regular', 7, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 9, 'regular', 9, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 8, 'regular', 8, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'A', 10, 'regular', 10, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 9, 'regular', 9, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 1, 'regular', 1, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'A', 10, 'regular', 10, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 2, 'regular', 2, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 1, 'regular', 1, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 3, 'regular', 3, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 2, 'regular', 2, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 4, 'regular', 4, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 3, 'regular', 3, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 5, 'regular', 5, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 4, 'regular', 4, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 6, 'regular', 6, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 5, 'regular', 5, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 7, 'regular', 7, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 6, 'regular', 6, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 8, 'regular', 8, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 7, 'regular', 7, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 9, 'regular', 9, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 8, 'regular', 8, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'B', 10, 'regular', 10, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 9, 'regular', 9, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 1, 'regular', 1, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'B', 10, 'regular', 10, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 2, 'regular', 2, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 1, 'regular', 1, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 3, 'regular', 3, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 2, 'regular', 2, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 4, 'regular', 4, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 3, 'regular', 3, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 5, 'regular', 5, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 4, 'regular', 4, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 6, 'regular', 6, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 5, 'regular', 5, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 7, 'regular', 7, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 6, 'regular', 6, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 8, 'regular', 8, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 7, 'regular', 7, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 9, 'regular', 9, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 8, 'regular', 8, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (1, 'C', 10, 'regular', 10, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 9, 'regular', 9, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 1, 'regular', 1, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (1, 'C', 10, 'regular', 10, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 2, 'regular', 2, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 1, 'regular', 1, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 3, 'regular', 3, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 2, 'regular', 2, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 4, 'regular', 4, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 3, 'regular', 3, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 5, 'regular', 5, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 4, 'regular', 4, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 6, 'regular', 6, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 5, 'regular', 5, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 7, 'regular', 7, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 6, 'regular', 6, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 8, 'regular', 8, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 7, 'regular', 7, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 9, 'regular', 9, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 8, 'regular', 8, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'A', 10, 'regular', 10, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 9, 'regular', 9, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 1, 'regular', 1, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'A', 10, 'regular', 10, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 2, 'regular', 2, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 1, 'regular', 1, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 3, 'regular', 3, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 2, 'regular', 2, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 4, 'regular', 4, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 3, 'regular', 3, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 5, 'regular', 5, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 4, 'regular', 4, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 6, 'regular', 6, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 5, 'regular', 5, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 7, 'regular', 7, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 6, 'regular', 6, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 8, 'regular', 8, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 7, 'regular', 7, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 9, 'regular', 9, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 8, 'regular', 8, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'B', 10, 'regular', 10, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 9, 'regular', 9, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 1, 'regular', 1, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'B', 10, 'regular', 10, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 2, 'regular', 2, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 1, 'regular', 1, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 3, 'regular', 3, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 2, 'regular', 2, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 4, 'regular', 4, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 3, 'regular', 3, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 5, 'regular', 5, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 4, 'regular', 4, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 6, 'regular', 6, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 5, 'regular', 5, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 7, 'regular', 7, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 6, 'regular', 6, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 8, 'regular', 8, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 7, 'regular', 7, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 9, 'regular', 9, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 8, 'regular', 8, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (2, 'C', 10, 'regular', 10, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 9, 'regular', 9, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 1, 'regular', 1, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (2, 'C', 10, 'regular', 10, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 2, 'regular', 2, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 1, 'regular', 1, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 3, 'regular', 3, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 2, 'regular', 2, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 4, 'regular', 4, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 3, 'regular', 3, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 5, 'regular', 5, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 4, 'regular', 4, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 6, 'regular', 6, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 5, 'regular', 5, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 7, 'regular', 7, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 6, 'regular', 6, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 8, 'regular', 8, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 7, 'regular', 7, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 9, 'regular', 9, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 8, 'regular', 8, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'A', 10, 'regular', 10, 0, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 9, 'regular', 9, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 1, 'regular', 1, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'A', 10, 'regular', 10, 0, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 2, 'regular', 2, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 1, 'regular', 1, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 3, 'regular', 3, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 2, 'regular', 2, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 4, 'regular', 4, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 3, 'regular', 3, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 5, 'regular', 5, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 4, 'regular', 4, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 6, 'regular', 6, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 5, 'regular', 5, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 7, 'regular', 7, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 6, 'regular', 6, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 8, 'regular', 8, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 7, 'regular', 7, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 9, 'regular', 9, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 8, 'regular', 8, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'B', 10, 'regular', 10, 1, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 9, 'regular', 9, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 1, 'regular', 1, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'B', 10, 'regular', 10, 1, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 2, 'regular', 2, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 1, 'regular', 1, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 3, 'regular', 3, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 2, 'regular', 2, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 4, 'regular', 4, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 3, 'regular', 3, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 5, 'regular', 5, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 4, 'regular', 4, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 6, 'regular', 6, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 5, 'regular', 5, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 7, 'regular', 7, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 6, 'regular', 6, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 8, 'regular', 8, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 7, 'regular', 7, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 9, 'regular', 9, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 8, 'regular', 8, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (3, 'C', 10, 'regular', 10, 2, 0.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 9, 'regular', 9, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 1, 'VIP', 1, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (3, 'C', 10, 'regular', 10, 2, 0.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 2, 'VIP', 2, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 1, 'VIP', 1, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 3, 'VIP', 3, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 2, 'VIP', 2, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 4, 'VIP', 4, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 3, 'VIP', 3, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 5, 'VIP', 5, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 4, 'VIP', 4, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 6, 'VIP', 6, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 5, 'VIP', 5, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 7, 'VIP', 7, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 6, 'VIP', 6, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 8, 'VIP', 8, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 7, 'VIP', 7, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 9, 'VIP', 9, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 8, 'VIP', 8, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'A', 10, 'VIP', 10, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 9, 'VIP', 9, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 1, 'VIP', 1, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'A', 10, 'VIP', 10, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 2, 'VIP', 2, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 1, 'VIP', 1, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 3, 'VIP', 3, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 2, 'VIP', 2, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 4, 'VIP', 4, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 3, 'VIP', 3, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 5, 'VIP', 5, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 4, 'VIP', 4, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 6, 'VIP', 6, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 5, 'VIP', 5, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 7, 'VIP', 7, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 6, 'VIP', 6, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 8, 'VIP', 8, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 7, 'VIP', 7, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 9, 'VIP', 9, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 8, 'VIP', 8, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'B', 10, 'VIP', 10, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 9, 'VIP', 9, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 1, 'VIP', 1, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'B', 10, 'VIP', 10, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 2, 'VIP', 2, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 1, 'VIP', 1, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 3, 'VIP', 3, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 2, 'VIP', 2, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 4, 'VIP', 4, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 3, 'VIP', 3, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 5, 'VIP', 5, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 4, 'VIP', 4, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 6, 'VIP', 6, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 5, 'VIP', 5, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 7, 'VIP', 7, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 6, 'VIP', 6, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 8, 'VIP', 8, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 7, 'VIP', 7, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 9, 'VIP', 9, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 8, 'VIP', 8, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'C', 10, 'VIP', 10, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 9, 'VIP', 9, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 1, 'VIP', 1, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'C', 10, 'VIP', 10, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 2, 'VIP', 2, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 1, 'VIP', 1, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 3, 'VIP', 3, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 2, 'VIP', 2, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 4, 'VIP', 4, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 3, 'VIP', 3, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 5, 'VIP', 5, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 4, 'VIP', 4, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 6, 'VIP', 6, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 5, 'VIP', 5, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 7, 'VIP', 7, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 6, 'VIP', 6, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 8, 'VIP', 8, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 7, 'VIP', 7, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 9, 'VIP', 9, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 8, 'VIP', 8, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (4, 'D', 10, 'VIP', 10, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 9, 'VIP', 9, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 1, 'VIP', 1, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (4, 'D', 10, 'VIP', 10, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 2, 'VIP', 2, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 1, 'VIP', 1, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 3, 'VIP', 3, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 2, 'VIP', 2, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 4, 'VIP', 4, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 3, 'VIP', 3, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 5, 'VIP', 5, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 4, 'VIP', 4, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 6, 'VIP', 6, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 5, 'VIP', 5, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 7, 'VIP', 7, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 6, 'VIP', 6, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 8, 'VIP', 8, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 7, 'VIP', 7, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 9, 'VIP', 9, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 8, 'VIP', 8, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'A', 10, 'VIP', 10, 0, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 9, 'VIP', 9, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 1, 'VIP', 1, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'A', 10, 'VIP', 10, 0, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 2, 'VIP', 2, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 1, 'VIP', 1, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 3, 'VIP', 3, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 2, 'VIP', 2, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 4, 'VIP', 4, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 3, 'VIP', 3, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 5, 'VIP', 5, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 4, 'VIP', 4, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 6, 'VIP', 6, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 5, 'VIP', 5, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 7, 'VIP', 7, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 6, 'VIP', 6, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 8, 'VIP', 8, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 7, 'VIP', 7, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 9, 'VIP', 9, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 8, 'VIP', 8, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'B', 10, 'VIP', 10, 1, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 9, 'VIP', 9, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 1, 'VIP', 1, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'B', 10, 'VIP', 10, 1, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 2, 'VIP', 2, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 1, 'VIP', 1, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 3, 'VIP', 3, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 2, 'VIP', 2, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 4, 'VIP', 4, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 3, 'VIP', 3, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 5, 'VIP', 5, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 4, 'VIP', 4, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 6, 'VIP', 6, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 5, 'VIP', 5, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 7, 'VIP', 7, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 6, 'VIP', 6, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 8, 'VIP', 8, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 7, 'VIP', 7, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 9, 'VIP', 9, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 8, 'VIP', 8, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'C', 10, 'VIP', 10, 2, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 9, 'VIP', 9, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 1, 'VIP', 1, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'C', 10, 'VIP', 10, 2, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 2, 'VIP', 2, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 1, 'VIP', 1, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 3, 'VIP', 3, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 2, 'VIP', 2, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 4, 'VIP', 4, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 3, 'VIP', 3, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 5, 'VIP', 5, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 4, 'VIP', 4, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 6, 'VIP', 6, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 5, 'VIP', 5, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 7, 'VIP', 7, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 6, 'VIP', 6, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 8, 'VIP', 8, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 7, 'VIP', 7, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 9, 'VIP', 9, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 8, 'VIP', 8, 3, 20000.00, true);
+INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
+VALUES (5, 'D', 10, 'VIP', 10, 3, 20000.00, true);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 9, 'VIP', 9, 3, 20000.00, true);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (1, 72);
 
--- INSERT INTO seat (theater_room_id, row_label, seat_number, seat_type, x_coordinate, y_coordinate, additional_price, is_active)
--- VALUES (5, 'D', 10, 'VIP', 10, 3, 20000.00, true);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (1, 123);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (1, 72);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (1, 62);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (1, 123);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (2, 86);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (1, 62);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (2, 58);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (2, 86);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (2, 74);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (2, 58);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (3, 166);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (2, 74);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (4, 116);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (3, 166);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (4, 118);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (4, 116);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (5, 117);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (4, 118);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (5, 8);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (5, 117);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (5, 95);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (5, 8);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (6, 162);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (5, 95);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (7, 70);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (6, 162);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (7, 35);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (7, 70);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (8, 78);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (7, 35);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (8, 52);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (8, 78);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (9, 139);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (8, 52);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (9, 43);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (9, 139);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (10, 97);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (9, 43);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (10, 7);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (10, 97);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (10, 159);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (10, 7);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (11, 98);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (10, 159);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (12, 138);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (11, 98);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (12, 121);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (12, 138);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (12, 20);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (12, 121);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (13, 28);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (12, 20);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (14, 73);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (13, 28);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (14, 32);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (14, 73);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (14, 104);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (14, 32);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (15, 31);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (14, 104);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (15, 47);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (15, 31);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (15, 37);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (15, 47);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (16, 78);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (15, 37);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (16, 64);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (16, 78);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (17, 141);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (16, 64);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (17, 151);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (17, 141);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (18, 164);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (17, 151);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (19, 71);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (18, 164);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (20, 95);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (19, 71);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (20, 149);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (20, 95);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (20, 105);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (20, 149);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (21, 2);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (20, 105);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (21, 98);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (21, 2);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (22, 73);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (21, 98);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (22, 145);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (22, 73);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (22, 163);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (22, 145);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (23, 28);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (22, 163);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (23, 125);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (23, 28);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (23, 106);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (23, 125);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (24, 59);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (23, 106);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (24, 69);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (24, 59);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (24, 115);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (24, 69);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (25, 7);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (24, 115);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (25, 89);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (25, 7);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (26, 140);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (25, 89);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (26, 22);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (26, 140);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (26, 147);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (26, 22);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (27, 14);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (26, 147);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (27, 67);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (27, 14);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (27, 130);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (27, 67);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (28, 55);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (27, 130);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (28, 91);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (28, 55);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (28, 108);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (28, 91);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (29, 163);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (28, 108);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (29, 54);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (29, 163);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (29, 36);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (29, 54);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (30, 135);
 
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (29, 36);
-
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (30, 135);
-
--- INSERT INTO booking_seat (booking_id, seat_id)
--- VALUES (30, 39);
+INSERT INTO booking_seat (booking_id, seat_id)
+VALUES (30, 39);
 
 -- INSERT INTO payment (payment_number, booking_id, payment_method, payment_time, amount, status, reference_number)
 -- VALUES ('PAY1001', 1, 'OVO', '2025-04-29 15:37:05', 91230, 'PENDING', '0202A428');
