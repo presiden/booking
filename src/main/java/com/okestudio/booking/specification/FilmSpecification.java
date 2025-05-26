@@ -31,14 +31,6 @@ public class FilmSpecification {
                 predicates.add(cb.lessThanOrEqualTo(root.get("duration"), dto.getDurationMax()));
             }
 
-            if (dto.getRatingMin() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("rating_average"), dto.getRatingMin()));
-            }
-
-            if (dto.getRatingMax() != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("rating_average"), dto.getRatingMax()));
-            }
-
             if (dto.getReleaseStart() != null) {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("release_date"), dto.getReleaseStart()));
             }

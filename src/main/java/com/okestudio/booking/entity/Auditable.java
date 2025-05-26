@@ -40,13 +40,13 @@ public abstract class Auditable extends BaseEntity {
     // protected LocalDateTime modifiedDate;
 
     @Column(name = "deleted", nullable = false)
-    protected boolean deleted = false;
+    private boolean deleted = false;
 
     @Column(name = "deleted_by")
-    protected String deletedBy;
+    private String deletedBy;
 
     @Column(name = "deleted_date")
-    protected LocalDateTime deletedDate;
+    private LocalDateTime deletedDate;
 
     public void markAsDeleted(String username) {
         this.deleted = true;

@@ -7,5 +7,5 @@ public class SubtitleResponseDto {
     private Long id;
     private String name;
     private String code;
-    private Boolean isActive;
+    // private Boolean isActive;
 }

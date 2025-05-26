@@ -1,10 +1,11 @@
 package com.okestudio.booking.dto;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.okestudio.booking.entity.Person;
+// import com.okestudio.booking.entity.Person;
 
 import lombok.Data;
 
@@ -25,7 +26,7 @@ public class FilmDetailResponseDto {
 
     private Integer duration;
 
-    private Person director;
+    // private Person director;
 
     private String imagePath;
 
@@ -33,10 +34,10 @@ public class FilmDetailResponseDto {
 
     private LocalDateTime releaseDate;
 
-    private BigDecimal ratingAverage;
+    private String rating;
 
-    private Set<WriterResponseDto> writers;
+    // private Set<WriterResponseDto> writers;
 
-    private Set<StarResponseDto> stars;
+    // private Set<StarResponseDto> stars;
 
 }

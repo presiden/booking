@@ -1,5 +1,6 @@
 package com.okestudio.booking.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -38,6 +39,9 @@ public class Shows extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theater_room_id", nullable = false)
     private TheaterRoom theaterRoom;
+
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;

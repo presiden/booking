@@ -22,14 +22,6 @@ public class UsersAddress extends BaseEntity {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "country_id")
-    // private Country country;
-
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "province_id")
-    // private Province province;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private City city;

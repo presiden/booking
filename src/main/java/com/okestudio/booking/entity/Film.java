@@ -54,11 +54,11 @@ public class Film extends BaseEntity {
     private Set<Languages> subtitle;
 
     @Column(name = "duration", nullable = false)
-    private Duration duration;
+    private Integer duration;
 
-    @ManyToOne
-    @JoinColumn(name = "director_id", nullable = true)
-    private Person director;
+    // @ManyToOne
+    // @JoinColumn(name = "director_id", nullable = true)
+    // private Person director;
 
     @Column(name = "image_path", nullable = true, length = 512)
     private String imagePath;
@@ -69,24 +69,24 @@ public class Film extends BaseEntity {
     @Column(name = "release_date", nullable = true)
     private LocalDateTime releaseDate;
 
-    @Column(name = "rating", nullable = true)
-    private Rating rating;
+    @Column(name = "rating", nullable = true, length = 10)
+    private String rating;
 
-    @ManyToMany
-    @JoinTable(
-        name = "film_writer",
-        joinColumns = @JoinColumn(name = "film_id"),
-        inverseJoinColumns = @JoinColumn(name = "writer_id")
-    )
-    private Set<Person> writers;
+    // @ManyToMany
+    // @JoinTable(
+    //     name = "film_writer",
+    //     joinColumns = @JoinColumn(name = "film_id"),
+    //     inverseJoinColumns = @JoinColumn(name = "writer_id")
+    // )
+    // private Set<Person> writers;
 
-    @ManyToMany
-    @JoinTable(
-        name = "film_star",
-        joinColumns = @JoinColumn(name = "film_id"),
-        inverseJoinColumns = @JoinColumn(name = "star_id")
-    )
-    private Set<Person> stars;
+    // @ManyToMany
+    // @JoinTable(
+    //     name = "film_star",
+    //     joinColumns = @JoinColumn(name = "film_id"),
+    //     inverseJoinColumns = @JoinColumn(name = "star_id")
+    // )
+    // private Set<Person> stars;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;

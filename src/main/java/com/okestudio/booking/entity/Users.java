@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,17 +21,19 @@ import lombok.Setter;
 @Table(name = "users")
 public class Users extends BaseEntity {
 
-    @Column(name = "username", nullable = false, unique = true, length = 30)
+    @Size(min = 5, max = 20, message = "Username must be between 5 and 20 characters")
+    @Column(name = "username", nullable = false, unique = true, length = 20)
     private String username;
 
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Size(min = 5, max = 50, message = "Username must be between 5 and 50 characters")
+    @Column(name = "fullname", nullable = false, length = 50)
+    private String fullname;
 
     @Column(name = "email", nullable = false, unique = true, length = 50)
     private String email;
 
-    @Column(name = "phone", nullable = false, unique = true, length = 20)
-    private String phone;
+    @Column(name = "phoneNumber", nullable = false, unique = true, length = 20)
+    private String phoneNumber;
 
     @Column(name = "password", nullable = false, length = 512)
     private String password;

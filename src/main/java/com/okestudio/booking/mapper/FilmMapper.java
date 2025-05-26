@@ -7,19 +7,20 @@ import org.mapstruct.factory.Mappers;
 
 import com.okestudio.booking.dto.FilmCreateRequestDto;
 import com.okestudio.booking.dto.FilmDetailResponseDto;
-import com.okestudio.booking.dto.FilmSummaryResponseDto;
+import com.okestudio.booking.dto.FilmResponseDto;
 import com.okestudio.booking.entity.Film;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface FilmMapper {
-    FilmMapper INSTANCE = Mappers.getMapper(FilmMapper.class);
 
-    FilmDetailResponseDto toDto(Film entity);
+    FilmResponseDto toFilmResponseDto(Film entity);
+
+    FilmDetailResponseDto toFilmDetailResponseDto(Film entity);
     
     Film toEntity(FilmCreateRequestDto dto);
 
-    List<FilmSummaryResponseDto> toSummaryDtos(List<Film> entities);
+    List<FilmResponseDto> toSummaryDtos(List<Film> entities);
 
-    List<Film> toEntities(List<FilmDetailResponseDto> dtos);
+    // List<Film> toEntities(List<FilmDetailResponseDto> dtos);
     
 }

@@ -14,14 +14,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+// @NoArgsConstructor
+// @AllArgsConstructor
+// @Builder
 @Entity
 @Table(name = "city")
 public class City extends BaseEntity {
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true, length = 20)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
