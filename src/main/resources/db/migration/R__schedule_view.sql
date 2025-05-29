@@ -38,4 +38,5 @@ JOIN theater t ON t.id = tr.theater_id
 JOIN theater_address ta ON ta.theater_id = t.id
 JOIN total_seats ts ON ts.theater_room_id = tr.id
 JOIN completed_booking cb ON cb.theater_room_id = tr.id
+AND cb.shows_id = s.id
 WHERE (s.date + s.start_time)::timestamp > now();
