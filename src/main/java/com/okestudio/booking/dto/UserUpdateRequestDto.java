@@ -10,15 +10,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @UniqueUserFields
-public record UsersUpdateRequestDto(
+public record UserUpdateRequestDto(
         @NotNull(message = "ID cannot be null")
         Long id,
         @NotBlank(message = "Full name cannot be blank") 
         String fullname,
         @NotBlank(message = "Username cannot be blank") @UniquePhoneNumber @ValidUsername
         String username,
-        @NotBlank(message = "Email cannot be blank") 
-        @Email(message = "Invalid email format")
+        @NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email format")
         String email,
         @NotBlank(message = "Phone number cannot be blank") @ValidPhoneNumber
         String phoneNumber,

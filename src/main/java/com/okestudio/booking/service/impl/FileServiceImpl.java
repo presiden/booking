@@ -28,18 +28,12 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void uploadFile(MultipartFile file) throws Exception {
-        // Implement the logic to upload the file to MinIO
-        // Use the MinioClient to perform the upload operation
-        // Example:
-        // minioClient.putObject(bucketName, file.getOriginalFilename(), file.getInputStream(), file.getSize(), null, null, null);
         minioClient.putObject(PutObjectArgs.builder()
                 .bucket(minioProperties.getBucketName())
                 .object(file.getOriginalFilename())
                 .stream(file.getInputStream(), file.getSize(), -1)
-                // .contentType(file.getContentType())
                 .build());
     }
-    // Implement other methods as needed
 
     @Override
     public PresignedUrlResponseDto generateUploadLink(String fileName) throws Exception {
@@ -56,8 +50,28 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public PresignedUrlResponseDto generateDownloadLink(String fileName) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'generateDownloadLink'");
+        String url = minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .bucket(minioProperties.getBucketName())
+                        .object("testing/" + fileName)
+                        .expiry(10, TimeUnit.MINUTES)
+                        .method(Method.GET)
+                        .build());
+    
+        return new PresignedUrlResponseDto(url, fileName);    
+    }
+
+    @Override
+    public PresignedUrlResponseDto generateDeleteLink(String fileName) throws Exception {
+        String url = minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .bucket(minioProperties.getBucketName())
+                        .object(fileName)
+                        .expiry(10, TimeUnit.MINUTES)
+                        .method(Method.DELETE)
+                        .build());
+    
+        return new PresignedUrlResponseDto(url, fileName); 
     }
 
 }

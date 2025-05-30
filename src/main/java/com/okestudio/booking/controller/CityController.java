@@ -15,9 +15,7 @@ import com.okestudio.booking.dto.AvailableTheaterDto;
 import com.okestudio.booking.dto.CityResponseDto;
 import com.okestudio.booking.dto.ResultPageResponseDto;
 import com.okestudio.booking.dto.ScheduleViewDto;
-import com.okestudio.booking.dto.UserProfileResponseDto;
 import com.okestudio.booking.service.CityService;
-import com.okestudio.booking.service.UsersService;
 
 @RestController
 @RequestMapping("/api/v1/city")

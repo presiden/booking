@@ -43,7 +43,7 @@ public class Booking extends Auditable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", nullable = false)
-    private Users users;
+    private User users;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shows_id", nullable = false)

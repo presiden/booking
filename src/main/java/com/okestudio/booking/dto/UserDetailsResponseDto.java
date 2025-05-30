@@ -1,11 +1,12 @@
 package com.okestudio.booking.dto;
 
-public record UserProfileDetailsResponseDto(
+public record UserDetailsResponseDto(
         Long id,
         String fullname,
         String username,
         String email,
         String phoneNumber,
         String birthDate,
-        String addressLine) {
+        String addressLine,
+        String imagePath) {
 }

@@ -11,5 +11,7 @@ public interface FileService {
     public PresignedUrlResponseDto generateUploadLink(String fileName) throws Exception;
 
     public PresignedUrlResponseDto generateDownloadLink(String fileName) throws Exception;
+
+    public PresignedUrlResponseDto generateDeleteLink(String fileName) throws Exception;
     
 }

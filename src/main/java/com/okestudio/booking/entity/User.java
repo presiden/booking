@@ -19,20 +19,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class Users extends BaseEntity {
+public class User extends BaseEntity {
 
     @Size(min = 5, max = 20, message = "Username must be between 5 and 20 characters")
     @Column(name = "username", nullable = false, unique = true, length = 20)
     private String username;
 
-    @Size(min = 5, max = 50, message = "Username must be between 5 and 50 characters")
+    @Size(min = 5, max = 50, message = "Fullname must be between 5 and 50 characters")
     @Column(name = "fullname", nullable = false, length = 50)
     private String fullname;
 
     @Column(name = "email", nullable = false, unique = true, length = 50)
     private String email;
 
-    @Column(name = "phoneNumber", nullable = false, unique = true, length = 20)
+    @Column(name = "phoneNumber", nullable = false, unique = true, length = 15)
     private String phoneNumber;
 
     @Column(name = "password", nullable = false, length = 512)
@@ -53,11 +53,6 @@ public class Users extends BaseEntity {
     public void addBooking(Booking booking) {
         this.bookings.add(booking);
         booking.setUsers(this);
-    }
-
-    public void removeBooking(Booking booking) {
-        this.bookings.remove(booking);
-        booking.setUsers(null);
     }
 
 }

@@ -9,7 +9,7 @@ import com.okestudio.booking.validation.annotation.ValidUsername;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record UsersCreateRequestDto(
+public record UserCreateRequestDto(
         @NotBlank(message = "Full name cannot be blank") 
         String fullname,
         @NotBlank(message = "Username cannot be blank") @UniqueUsername @ValidUsername

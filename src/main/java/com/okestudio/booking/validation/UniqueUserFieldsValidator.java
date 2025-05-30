@@ -2,24 +2,24 @@ package com.okestudio.booking.validation;
 
 import org.springframework.stereotype.Component;
 
-import com.okestudio.booking.dto.UsersUpdateRequestDto;
-import com.okestudio.booking.repository.UsersRepository;
+import com.okestudio.booking.dto.UserUpdateRequestDto;
+import com.okestudio.booking.repository.UserRepository;
 import com.okestudio.booking.validation.annotation.UniqueUserFields;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 @Component
-public class UniqueUserFieldsValidator implements ConstraintValidator<UniqueUserFields, UsersUpdateRequestDto> {
+public class UniqueUserFieldsValidator implements ConstraintValidator<UniqueUserFields, UserUpdateRequestDto> {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository usersRepository;
 
-    public UniqueUserFieldsValidator(UsersRepository usersRepository) {
+    public UniqueUserFieldsValidator(UserRepository usersRepository) {
         this.usersRepository = usersRepository;
     }
 
     @Override
-    public boolean isValid(UsersUpdateRequestDto dto, ConstraintValidatorContext context) {
+    public boolean isValid(UserUpdateRequestDto dto, ConstraintValidatorContext context) {
         boolean isValid = true;
 
         if (dto.username() != null && usersRepository.existsByUsernameAndIdNot(dto.username(), dto.id())) {
