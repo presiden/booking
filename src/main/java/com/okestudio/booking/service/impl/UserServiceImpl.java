@@ -1,8 +1,11 @@
 package com.okestudio.booking.service.impl;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.stereotype.Service;
 
 import com.okestudio.booking.dto.UserDetailsResponseDto;
+import com.okestudio.booking.dto.UserResponseDto;
 import com.okestudio.booking.dto.UserCreateRequestDto;
 import com.okestudio.booking.entity.User;
 import com.okestudio.booking.mapper.UserMapper;
@@ -14,23 +17,30 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository usersRepository;
+    private final UserRepository userRepository;
 
-    private final UserMapper usersMapper;
+    private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository usersRepository,
-            UserMapper usersMapper) {
-        this.usersRepository = usersRepository;
-        this.usersMapper = usersMapper;
+    public UserServiceImpl(UserRepository userRepository,
+            UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
     @Transactional
     public UserDetailsResponseDto createUserProfile(UserCreateRequestDto createRequestDto) {
-        User user = usersMapper.toUsers(createRequestDto);
-        user = usersRepository.save(user);
+        User user = userMapper.toUsers(createRequestDto);
+        user = userRepository.save(user);
 
-        return usersMapper.toUserProfileDetailsResponseDto(user);
+        return userMapper.toUserDetailsResponseDto(user);
+    }
+
+    @Override
+    public UserResponseDto getUserProfile(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+        return userMapper.toUserResponseDto(user);
     }
 
 }
