@@ -21,8 +21,8 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService usersService) {
-        this.userService = usersService;
+    public UserController(UserService userService) {
+        this.userService = userService
     }
 
     @PostMapping
@@ -35,6 +35,12 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getUserProfile(@PathVariable String username) {
         UserResponseDto userProfile = userService.getUserProfile(username);
         return ResponseEntity.ok(userProfile);
+    }
+
+    @GetMapping("/{username}/details")
+    public ResponseEntity<UserDetailsResponseDto> getUserProfileDetails(@PathVariable String username) {
+        UserDetailsResponseDto usersProfileDetails = userService.getUserProfileDetails(username);
+        return ResponseEntity.ok(usersProfileDetails);
     }
 
 }

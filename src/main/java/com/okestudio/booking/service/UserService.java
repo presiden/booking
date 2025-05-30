@@ -10,4 +10,6 @@ public interface UserService {
 
     public UserResponseDto getUserProfile(String username);
 
+    public UserDetailsResponseDto getUserDetails(String username);
+
 }

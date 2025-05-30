@@ -43,4 +43,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponseDto(user);
     }
 
+    @Override
+    public UserDetailsResponseDto getUserDetails(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+        return userMapper.toUserDetailsResponseDto(user);
+    }
+
 }
