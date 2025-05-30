@@ -31,7 +31,7 @@ public class UsersAddress extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", nullable = false)
-    private Users users;
+    private User users;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;

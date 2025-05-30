@@ -3,7 +3,6 @@ package com.okestudio.booking.view;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import org.checkerframework.checker.units.qual.s;
 import org.springframework.data.annotation.Immutable;
 
 import jakarta.persistence.Column;

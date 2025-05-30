@@ -2,8 +2,7 @@ minio:
  url: http://127.0.0.1:9000
  access-key: v6rWvVtfNmrabacZQmQd
  secret-key: 1JlXFUqvFED0erOHiAgPPcEz4NJdzn3ZHZNsff8a
- bucket:
-  name: belajar-backend
+ bucketName: belajar-backend
 spring:
  servlet:
   multipart:

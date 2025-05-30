@@ -69,7 +69,8 @@ BEGIN
         FOR i IN 1..LEAST(v_count, array_length(v_seat_ids, 1)) LOOP
             v_seat_id := v_seat_ids[i];
             INSERT INTO booking_seat (booking_id, seat_id)
-            VALUES (r_booking.id, v_seat_id);
+            VALUES (r_booking.id, v_seat_id)
+            ON CONFLICT DO NOTHING; -- ⬅️ ini penting untuk menghindari duplikat error
         END LOOP;
     END LOOP;
 
