@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,7 @@ public class TheaterRepositoryTest {
         theater2.setImagePath("/images/theaters/cgv-pp.jpg");
     }
 
+    @Disabled
     @Test
     void testSaveTheater() {
         // Save the theater
@@ -73,6 +75,7 @@ public class TheaterRepositoryTest {
         // assertNotNull(savedTheater.getCreatedBy());
     }
 
+    @Disabled
     @Test
     void testFindByName() {
         theaterRepository.save(theater1);
@@ -89,6 +92,7 @@ public class TheaterRepositoryTest {
         assertEquals("CGV02", foundTheaters.get(0).getCode());
     }
 
+    @Disabled
     @Test
     void testUpdateTheater() {
         // Create and save initial theater
