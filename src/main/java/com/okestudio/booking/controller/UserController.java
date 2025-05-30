@@ -22,25 +22,25 @@ public class UserController {
     private final UserService userService;
 
     public UserController(UserService userService) {
-        this.userService = userService
+        this.userService = userService;
     }
 
     @PostMapping
-    public ResponseEntity<UserDetailsResponseDto> createUserProfile(@RequestBody @Valid UserCreateRequestDto dto) {
-        UserDetailsResponseDto usersProfileDetails = userService.createUserProfile(dto);
-        return ResponseEntity.ok(usersProfileDetails);
+    public ResponseEntity<UserDetailsResponseDto> createUser(@RequestBody @Valid UserCreateRequestDto dto) {
+        UserDetailsResponseDto usersDetails = userService.createUser(dto);
+        return ResponseEntity.ok(usersDetails);
     } 
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserResponseDto> getUserProfile(@PathVariable String username) {
-        UserResponseDto userProfile = userService.getUserProfile(username);
-        return ResponseEntity.ok(userProfile);
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable String username) {
+        UserResponseDto user = userService.getUser(username);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/{username}/details")
-    public ResponseEntity<UserDetailsResponseDto> getUserProfileDetails(@PathVariable String username) {
-        UserDetailsResponseDto usersProfileDetails = userService.getUserProfileDetails(username);
-        return ResponseEntity.ok(usersProfileDetails);
+    public ResponseEntity<UserDetailsResponseDto> getUserDetails(@PathVariable String username) {
+        UserDetailsResponseDto usersDetails = userService.getUserDetails(username);
+        return ResponseEntity.ok(usersDetails);
     }
 
 }
