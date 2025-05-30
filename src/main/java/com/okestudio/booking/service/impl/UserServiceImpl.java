@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDetailsResponseDto createUserProfile(UserCreateRequestDto createRequestDto) {
+    public UserDetailsResponseDto createUser(UserCreateRequestDto createRequestDto) {
         User user = userMapper.toUsers(createRequestDto);
         user = userRepository.save(user);
 
@@ -37,10 +37,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUserProfile(String username) {
+    public UserResponseDto getUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
         return userMapper.toUserResponseDto(user);
+    }
+
+    @Override
+    public UserDetailsResponseDto getUserDetails(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+        return userMapper.toUserDetailsResponseDto(user);
     }
 
 }

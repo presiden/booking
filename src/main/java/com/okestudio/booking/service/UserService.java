@@ -6,8 +6,10 @@ import com.okestudio.booking.dto.UserCreateRequestDto;
 
 public interface UserService {
 
-    public UserDetailsResponseDto createUserProfile(UserCreateRequestDto createRequestDto);
+    public UserDetailsResponseDto createUser(UserCreateRequestDto createRequestDto);
 
-    public UserResponseDto getUserProfile(String username);
+    public UserResponseDto getUser(String username);
+
+    public UserDetailsResponseDto getUserDetails(String username);
 
 }
