@@ -1,43 +1,19 @@
 package com.okestudio.booking.dto;
 
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-// import com.okestudio.booking.entity.Person;
-
-import lombok.Data;
-
-@Data
-public class FilmDetailResponseDto {
-    
-    private Long id;
-
-    private String title;
-
-    private String description;
-
-    private Set<GenreResponseDto> genre;
-
-    private LanguagesResponseDto languages;
-
-    private Set<SubtitleResponseDto> subtitle;
-
-    private Integer duration;
-
-    // private Person director;
-
-    private String imagePath;
-
-    private String trailerPath;
-
-    private LocalDateTime releaseDate;
-
-    private String rating;
-
-    // private Set<WriterResponseDto> writers;
-
-    // private Set<StarResponseDto> stars;
-
+public record FilmDetailResponseDto (
+    Long id,
+    String title,
+    String description,
+    Set<GenreResponseDto> genre,
+    LanguagesResponseDto languages,
+    Set<SubtitleResponseDto> subtitle,
+    Integer duration,
+    String imagePath,
+    String trailerPath,
+    LocalDateTime releaseDate,
+    String rating){
 }
+
