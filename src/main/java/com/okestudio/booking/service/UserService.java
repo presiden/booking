@@ -2,6 +2,7 @@ package com.okestudio.booking.service;
 
 import com.okestudio.booking.dto.UserDetailsResponseDto;
 import com.okestudio.booking.dto.UserResponseDto;
+import com.okestudio.booking.dto.UserUpdateRequestDto;
 import com.okestudio.booking.dto.UserCreateRequestDto;
 
 public interface UserService {
@@ -11,5 +12,7 @@ public interface UserService {
     public UserResponseDto getUser(String username);
 
     public UserDetailsResponseDto getUserDetails(String username);
+
+    public UserDetailsResponseDto updateUser(String username, UserUpdateRequestDto updateRequestDto);
 
 }

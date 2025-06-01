@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.okestudio.booking.dto.UserDetailsResponseDto;
 import com.okestudio.booking.dto.UserResponseDto;
 import com.okestudio.booking.dto.UserCreateRequestDto;
+import com.okestudio.booking.dto.UserUpdateRequestDto;
 import com.okestudio.booking.entity.User;
 import com.okestudio.booking.mapper.UserMapper;
 import com.okestudio.booking.repository.UserRepository;
@@ -48,6 +49,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
         return userMapper.toUserDetailsResponseDto(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDetailsResponseDto updateUser(String username, UserUpdateRequestDto updateRequestDto) {
+        User users = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+        userMapper.updateUserFromDto(updateRequestDto, users);
+
+        return userMapper.toUserDetailsResponseDto(users);
     }
 
 }

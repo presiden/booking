@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.okestudio.booking.dto.FilmRequestDto;
+import com.okestudio.booking.dto.FilmCreateRequestDto;
 import com.okestudio.booking.dto.FilmDetailResponseDto;
 import com.okestudio.booking.dto.FilmResponseDto;
 import com.okestudio.booking.dto.ResultPageResponseDto;
@@ -78,6 +79,12 @@ public class FilmServiceImpl implements FilmService {
     public ResultPageResponseDto<AvailableFilmView> getByTitleContaining(String title, Pageable pageable) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findByTitleContaining'");
+    }
+
+    @Override
+    public FilmDetailResponseDto createFilm(FilmCreateRequestDto dto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createFilm'");
     }
 
 }
