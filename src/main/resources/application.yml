@@ -11,7 +11,7 @@ spring:
  application:
   name: booking
  datasource:
-  url: jdbc:postgresql://postgres-svc:5433/booking
+  url: jdbc:postgresql://postgres-svc:5432/booking
   username: postgres
   password: postgres
   driver-class-name: org.postgresql.Driver
@@ -30,7 +30,7 @@ spring:
       format_sql: true
   show-sql: true
  flyway:
-  url: jdbc:postgresql://postgres-svc:5433/booking
+  url: jdbc:postgresql://postgres-svc:5432/booking
   user: postgres
   password: postgres
   enabled: true
@@ -42,5 +42,5 @@ server:
 ---
 spring:
  config.activate.on-profile: test
- datasource.url: jdbc:postgresql://postgres-svc:5433/booking
+ datasource.url: jdbc:postgresql://postgres-svc:5432/booking
  jpa.hibernate.ddl-auto: validate
