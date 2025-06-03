@@ -1,0 +1,55 @@
+services:
+  postgres-svc:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: booking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"  # 5433 host -> 5432 container
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  minio-svc:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_URL: http://localhost:9000
+      MINIO_ROOT_USER: ROOTNAME
+      MINIO_ROOT_PASSWORD: CHANGEME123
+      MINIO_ACCESS_KEY: qWBCMia3unLkwRTItRSM
+      MINIO_SECRET_KEY: XPWSJE0ewnhRxRKC3YtKjGI82WG6nWhTzo9PYscL
+    volumes:
+      - ~/minio/data:/data
+    restart: unless-stopped
+
+  booking-app:
+    container_name: booking-app
+    image: booking-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres-svc
+      - minio-svc
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-svc:5432/booking
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      MINIO_URL: http://host.docker.internal:9000
+      MINIO_ACCESS_KEY: qWBCMia3unLkwRTItRSM
+      MINIO_SECRET_KEY: XPWSJE0ewnhRxRKC3YtKjGI82WG6nWhTzo9PYscL
+      MINIO_BUCKET: belajar-backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  minio-data:

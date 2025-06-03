@@ -1,6 +1,8 @@
 package com.okestudio.booking.service.impl;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.okestudio.booking.dto.AvailableFilmsDto;
@@ -78,7 +81,7 @@ public class CityServiceImpl implements CityService {
         if(title == null || title.isBlank()) {
             availableFilms = availableFilmViewRepository.findByCityId(cityId, pageable);
         } else {
-            availableFilms = availableFilmViewRepository.findByCityIdAndTitleContaining(cityId, title, pageable);
+            availableFilms = availableFilmViewRepository.findByCityIdAndTitleContainingIgnoreCase(cityId, title, pageable);
         }
 
         List<AvailableFilmsDto> dtoList = availableFilms
@@ -98,7 +101,7 @@ public class CityServiceImpl implements CityService {
         if(name == null || name.isBlank()) {
             availableTheater = availableTheaterViewRepository.findByCityId(cityId, pageable);
         } else {
-            availableTheater = availableTheaterViewRepository.findByCityIdAndNameContaining(cityId, name, pageable);
+            availableTheater = availableTheaterViewRepository.findByCityIdAndNameContainingIgnoreCase(cityId, name, pageable);
         }
 
         List<AvailableTheaterDto> dtoList = availableTheater
@@ -111,29 +114,36 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public ResultPageResponseDto<ScheduleViewDto> getScheduleByCityAndFilmAndShowDate(Long cityId, Long filmId,
-            String showDate, Integer page, Integer size) {
-        Pageable pageable = PaginationUtil.getPageable(page, size, "theaterName", "ASC");
-        LocalDate showDateParsed = parseDate(showDate);
+            Long showDate, Integer page, Integer size) {
+        Sort sort = Sort.by(
+                Sort.Order.asc("theaterName"),
+                Sort.Order.asc("roomName"),
+                Sort.Order.asc("showTime"));
 
-        Page<ScheduleView> scheduleView = scheduleViewRepository.findByCityIdAndFilmIdAndShowDate(cityId, filmId, showDateParsed, pageable);
+        Pageable pageable = PaginationUtil.getPageable(page, size, sort);
+        LocalDate localDate = parseDate(showDate);
+
+        Page<ScheduleView> scheduleView = scheduleViewRepository.findByCityIdAndFilmIdAndShowDate(cityId, filmId,
+                localDate, pageable);
 
         List<ScheduleViewDto> dtoList = scheduleView
-            .map(scheduleViewMapper::toScheduleViewDto)
-            .getContent();
+                .map(scheduleViewMapper::toScheduleViewDto)
+                .getContent();
 
         return new ResultPageResponseDto<>(dtoList, scheduleView.getTotalElements(), scheduleView.getTotalPages(),
                 scheduleView.getSize(), scheduleView.getNumber());
     }
 
-    private LocalDate parseDate(String dateString) {
-        if (dateString == null) {
+    private LocalDate parseDate(Long epochSeconds) {
+        if (epochSeconds == null) {
             return LocalDate.now();
         }
-        
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        ZoneId zoneId = ZoneId.systemDefault();
         try {
-            return LocalDate.parse(dateString, formatter);
+            return Instant.ofEpochSecond(epochSeconds)
+                    .atZone(zoneId)
+                    .toLocalDate();
         } catch (DateTimeParseException e) {
             return LocalDate.now();
         }

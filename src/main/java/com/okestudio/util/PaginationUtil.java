@@ -13,5 +13,9 @@ public class PaginationUtil {
     public static Pageable getPageable(int page, int size, String sortBy, String sortDirection) {
         return PageRequest.of(page, size, getSortDirection(sortDirection), sortBy);
     }
+
+    public static Pageable getPageable(int page, int size, Sort sort) {
+        return PageRequest.of(page, size, sort);
+    }
     
 }

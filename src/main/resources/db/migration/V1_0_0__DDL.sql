@@ -1,5 +1,19 @@
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
+CREATE OR REPLACE FUNCTION generate_booking_number() 
+RETURNS VARCHAR AS $$
+DECLARE
+    chars TEXT := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    result VARCHAR(20) := '';
+    i INT;
+BEGIN
+    FOR i IN 1..20 LOOP
+        result := result || substr(chars, floor(random() * length(chars) + 1)::INT, 1);
+    END LOOP;
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'booking_status') THEN
@@ -102,19 +116,18 @@ CREATE TABLE IF NOT EXISTS theater_room (
     code VARCHAR(5) NOT NULL,
     theater_id BIGINT NOT NULL,
     is_active BOOL NOT NULL DEFAULT TRUE,
-    UNIQUE(name),
-    UNIQUE(code),
+    UNIQUE(name, code),
     FOREIGN KEY (theater_id) REFERENCES theater(id)
 );
 
 CREATE TABLE IF NOT EXISTS theater_address (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL,
+    name VARCHAR(50) NOT NULL,
     city_id BIGINT,
     address_line VARCHAR(256) NOT NULL,
     theater_id BIGINT NOT NULL,
     is_active BOOL NOT NULL DEFAULT TRUE,
-    UNIQUE(name),
+    UNIQUE(name, theater_id),
     FOREIGN KEY (city_id) REFERENCES city(id),
     FOREIGN KEY (theater_id) REFERENCES theater(id)
 );
@@ -137,11 +150,11 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS users_address (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    city_id BIGINT,
+    city_id BIGINT NOT NULL,
     address_line VARCHAR(256) NOT NULL,
     users_id BIGINT NOT NULL,
     is_active BOOL NOT NULL DEFAULT TRUE,
-    UNIQUE(name),
+    UNIQUE(name, users_id),
     FOREIGN KEY (city_id) REFERENCES city(id),
     FOREIGN KEY (users_id) REFERENCES users(id)
 );

@@ -18,7 +18,7 @@ import com.okestudio.booking.dto.ScheduleViewDto;
 import com.okestudio.booking.service.CityService;
 
 @RestController
-@RequestMapping("/api/v1/city")
+@RequestMapping("/api/v1/cities")
 public class CityController {
 
     private final CityService cityService;
@@ -61,7 +61,7 @@ public class CityController {
     public ResponseEntity<ResultPageResponseDto<ScheduleViewDto>> getScheduleByCityAndFilmAndShowDate(
         @PathVariable Long cityId,
         @PathVariable Long filmId,
-        @RequestParam(required = false) String showDate,
+        @RequestParam(required = false) Long showDate,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
         ResultPageResponseDto<ScheduleViewDto> dto = cityService.getScheduleByCityAndFilmAndShowDate(cityId, filmId, showDate, page, size);
