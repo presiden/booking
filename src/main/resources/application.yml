@@ -1,7 +1,7 @@
 minio:
- url: ${MINIO_URL:http://127.0.01:9000}
- access-key: ${MINIO_ACCESS_KEY:v6rWvVtfNmrabacZQmQd}
- secret-key: ${MINIO_SECRET_KEY:1JlXFUqvFED0erOHiAgPPcEz4NJdzn3ZHZNsff8a}
+ url: http://minio-svc:9000
+ access-key: v6rWvVtfNmrabacZQmQd
+ secret-key: 1JlXFUqvFED0erOHiAgPPcEz4NJdzn3ZHZNsff8a
  bucketName: belajar-backend
 spring:
  servlet:
@@ -11,7 +11,7 @@ spring:
  application:
   name: booking
  datasource:
-  url: jdbc:postgresql://localhost:5432/booking
+  url: jdbc:postgresql://postgres-svc:5432/booking
   username: postgres
   password: postgres
   driver-class-name: org.postgresql.Driver
@@ -30,7 +30,7 @@ spring:
       format_sql: true
   show-sql: true
  flyway:
-  url: jdbc:postgresql://localhost:5432/booking
+  url: jdbc:postgresql://postgres-svc:5432/booking
   user: postgres
   password: postgres
   enabled: true
@@ -42,5 +42,5 @@ server:
 ---
 spring:
  config.activate.on-profile: test
- datasource.url: jdbc:postgresql://localhost:5432/booking
+ datasource.url: jdbc:postgresql://postgres-svc:5432/booking
  jpa.hibernate.ddl-auto: validate
