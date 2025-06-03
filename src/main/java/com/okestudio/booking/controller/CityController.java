@@ -11,6 +11,7 @@ import com.okestudio.booking.dto.AvailableFilmsDto;
 import com.okestudio.booking.dto.AvailableTheaterDto;
 import com.okestudio.booking.dto.CityResponseDto;
 import com.okestudio.booking.dto.ResultPageResponseDto;
+import com.okestudio.booking.dto.ScheduleViewDto;
 import com.okestudio.booking.service.CityService;
 
 @RestController
@@ -53,6 +54,17 @@ public class CityController {
             @RequestParam(defaultValue = "ASC") String sortDirection) {
         ResultPageResponseDto<AvailableTheaterDto> dto = cityService.getTheaterByCityAndName(cityId, name, page, size, sortBy,
                 sortDirection);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/{cityId}/films/{filmId}/schedules")
+    public ResponseEntity<ResultPageResponseDto<ScheduleViewDto>> getScheduleByCityAndFilmAndShowDate(
+        @PathVariable Long cityId,
+        @PathVariable Long filmId,
+        @RequestParam(required = false) Long showDate,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+        ResultPageResponseDto<ScheduleViewDto> dto = cityService.getScheduleByCityAndFilmAndShowDate(cityId, filmId, showDate, page, size);
         return ResponseEntity.ok(dto);
     }
 
