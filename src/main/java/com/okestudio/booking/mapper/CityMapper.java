@@ -7,7 +7,5 @@ import com.okestudio.booking.entity.City;
 
 @Mapper(componentModel = "spring")
 public interface CityMapper {
-
     CityResponseDto toCityResponseDto(City entity);
-
 }

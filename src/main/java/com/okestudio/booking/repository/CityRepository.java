@@ -1,15 +1,15 @@
 package com.okestudio.booking.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.okestudio.booking.entity.City;
 
 public interface CityRepository extends JpaRepository<City, Long> {
-    // Custom query methods can be defined here if needed
-    City findByName(String name);
+    
+    Page<City> findAll(Pageable pageable);
 
-    List<City> findAllByIsActiveTrue();
+    Page<City> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
 }
