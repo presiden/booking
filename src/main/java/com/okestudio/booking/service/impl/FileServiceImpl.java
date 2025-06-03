@@ -35,4 +35,17 @@ public class FileServiceImpl implements FileService {
     
         return new PresignedUrlResponseDto(url, fileName);      
     }
+    
+    @Override
+    public PresignedUrlResponseDto generateDownloadLink(String fileName) throws Exception {
+        String url = minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .bucket(minioProperties.getBucketName())
+                        .object(fileName)
+                        .expiry(10, TimeUnit.MINUTES)
+                        .method(Method.GET)
+                        .build());
+    
+        return new PresignedUrlResponseDto(url, fileName);    
+    }
 }

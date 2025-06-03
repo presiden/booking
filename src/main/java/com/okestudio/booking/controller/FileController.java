@@ -26,4 +26,9 @@ public class FileController {
         return ResponseEntity.ok(fileService.generateUploadLink(fileName));
     }
 
+    @GetMapping("/download/{fileName}")
+    public ResponseEntity<PresignedUrlResponseDto> generateDownloadLink(@PathVariable String fileName) throws Exception {
+        return ResponseEntity.ok(fileService.generateDownloadLink(fileName));
+    }
+
 }
