@@ -27,9 +27,9 @@ SELECT s.id,
 		s.start_time AS show_time,
 		ta.city_id,
 		ts.number_of_seats,
-		cb.completed_booking,
-		CASE 
-			WHEN completed_booking < number_of_seats THEN TRUE 
+		COALESCE(cb.completed_booking, 0) AS completed_booking,
+		CASE
+			WHEN COALESCE(cb.completed_booking, 0) < ts.number_of_seats THEN TRUE
 			ELSE FALSE
 		END AS available
 FROM shows s
@@ -37,6 +37,6 @@ JOIN theater_room tr ON tr.id = s.theater_room_id
 JOIN theater t ON t.id = tr.theater_id
 JOIN theater_address ta ON ta.theater_id = t.id
 JOIN total_seats ts ON ts.theater_room_id = tr.id
-JOIN completed_booking cb ON cb.theater_room_id = tr.id
+LEFT JOIN completed_booking cb ON cb.theater_room_id = tr.id
 AND cb.shows_id = s.id
 WHERE (s.date + s.start_time)::timestamp > now();

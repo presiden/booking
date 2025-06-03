@@ -9,7 +9,7 @@ import com.okestudio.booking.view.AvailableTheaterView;
 
 public interface AvailableTheaterViewRepository extends JpaRepository<AvailableTheaterView, Long> {
 
-    Page<AvailableTheaterView> findByCityIdAndNameContaining(Long cityId, String title, Pageable pageable);
+    Page<AvailableTheaterView> findByCityIdAndNameContainingIgnoreCase(Long cityId, String title, Pageable pageable);
 
     Page<AvailableTheaterView> findByCityId(Long cityId, Pageable pageable);
 

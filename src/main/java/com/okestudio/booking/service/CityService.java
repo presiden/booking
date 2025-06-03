@@ -19,6 +19,6 @@ public interface CityService {
     public ResultPageResponseDto<AvailableTheaterDto> getTheaterByCityAndName(Long cityId, String name, Integer page, Integer size,
             String sortBy, String sortDirection);
             
-    public ResultPageResponseDto<ScheduleViewDto> getScheduleByCityAndFilmAndShowDate(Long cityId, Long filmId, String showDate, Integer page, Integer size);
+    public ResultPageResponseDto<ScheduleViewDto> getScheduleByCityAndFilmAndShowDate(Long cityId, Long filmId, Long showDate, Integer page, Integer size);
 
 }

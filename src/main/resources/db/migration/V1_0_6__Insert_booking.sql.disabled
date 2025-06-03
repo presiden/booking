@@ -1,0 +1,79 @@
+
+
+-- Insert untuk 10 user pertama dengan 2-5 booking (5 di antaranya memiliki status IN_PROGRESS)
+-- User 1 (2 booking, 1 IN_PROGRESS)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 1, 1, NOW() - INTERVAL '10 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 1, 2, NOW() - INTERVAL '1 day', 'IN_PROGRESS');
+
+-- User 2 (3 booking, 1 IN_PROGRESS)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 2, 3, NOW() - INTERVAL '15 days', 'EXPIRED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 2, 4, NOW() - INTERVAL '8 days', 'CANCELLED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 2, 5, NOW() - INTERVAL '2 days', 'IN_PROGRESS');
+
+-- User 3 (4 booking, 1 IN_PROGRESS)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 3, 6, NOW() - INTERVAL '30 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 3, 7, NOW() - INTERVAL '25 days', 'EXPIRED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 3, 8, NOW() - INTERVAL '20 days', 'CANCELLED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 3, 9, NOW() - INTERVAL '3 days', 'IN_PROGRESS');
+
+-- User 4 (5 booking, 1 IN_PROGRESS)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 4, 10, NOW() - INTERVAL '45 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 4, 11, NOW() - INTERVAL '40 days', 'EXPIRED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 4, 12, NOW() - INTERVAL '35 days', 'CANCELLED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 4, 13, NOW() - INTERVAL '30 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 4, 14, NOW() - INTERVAL '5 days', 'IN_PROGRESS');
+
+-- User 5 (3 booking, 1 IN_PROGRESS)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 5, 15, NOW() - INTERVAL '20 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 5, 16, NOW() - INTERVAL '15 days', 'EXPIRED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 5, 17, NOW() - INTERVAL '4 days', 'IN_PROGRESS');
+
+-- User 6-10 (2-5 booking, tanpa IN_PROGRESS)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 6, 18, NOW() - INTERVAL '25 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 6, 19, NOW() - INTERVAL '20 days', 'CANCELLED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 6, 20, NOW() - INTERVAL '15 days', 'EXPIRED');
+
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 7, 21, NOW() - INTERVAL '30 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 7, 22, NOW() - INTERVAL '25 days', 'CANCELLED');
+
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 8, 23, NOW() - INTERVAL '40 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 8, 24, NOW() - INTERVAL '35 days', 'EXPIRED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 8, 25, NOW() - INTERVAL '30 days', 'CANCELLED');
+
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 9, 26, NOW() - INTERVAL '50 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 9, 27, NOW() - INTERVAL '45 days', 'EXPIRED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 9, 28, NOW() - INTERVAL '40 days', 'CANCELLED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 9, 29, NOW() - INTERVAL '35 days', 'COMPLETED');
+
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 10, 30, NOW() - INTERVAL '60 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 10, 31, NOW() - INTERVAL '55 days', 'EXPIRED');
+
+-- 5 user dengan 1 booking COMPLETED dan tambahan booking untuk show yang sama
+-- User 11 (COMPLETED + CANCELLED untuk show yang sama)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 11, 32, NOW() - INTERVAL '20 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 11, 32, NOW() - INTERVAL '21 days', 'CANCELLED');
+
+-- User 12 (COMPLETED + CANCELLED untuk show yang sama)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 12, 33, NOW() - INTERVAL '25 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 12, 33, NOW() - INTERVAL '26 days', 'CANCELLED');
+
+-- User 13 (COMPLETED + CANCELLED untuk show yang sama)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 13, 34, NOW() - INTERVAL '30 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 13, 34, NOW() - INTERVAL '31 days', 'CANCELLED');
+
+-- User 14 (COMPLETED + EXPIRED untuk show yang sama)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 14, 35, NOW() - INTERVAL '35 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 14, 35, NOW() - INTERVAL '36 days', 'EXPIRED');
+
+-- User 15 (COMPLETED + EXPIRED untuk show yang sama)
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 15, 36, NOW() - INTERVAL '40 days', 'COMPLETED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 15, 36, NOW() - INTERVAL '41 days', 'EXPIRED');
+
+-- 2 user dengan 1 booking EXPIRED
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 16, 37, NOW() - INTERVAL '50 days', 'EXPIRED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 17, 38, NOW() - INTERVAL '55 days', 'EXPIRED');
+
+-- 3 user dengan 1 booking CANCELLED
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 18, 39, NOW() - INTERVAL '60 days', 'CANCELLED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 19, 40, NOW() - INTERVAL '65 days', 'CANCELLED');
+INSERT INTO booking (booking_number, users_id, shows_id, booking_time, status) VALUES (generate_booking_number(), 20, 41, NOW() - INTERVAL '70 days', 'CANCELLED');

@@ -9,7 +9,7 @@ import com.okestudio.booking.view.AvailableFilmView;
 
 public interface AvailableFilmViewRepository extends JpaRepository<AvailableFilmView, Long> {
 
-    Page<AvailableFilmView> findByCityIdAndTitleContaining(Long cityId, String title, Pageable pageable);
+    Page<AvailableFilmView> findByCityIdAndTitleContainingIgnoreCase(Long cityId, String title, Pageable pageable);
 
     Page<AvailableFilmView> findByCityId(Long cityId, Pageable pageable);
 
