@@ -7,12 +7,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.okestudio.booking.dto.AvailableFilmsDto;
 import com.okestudio.booking.dto.CityResponseDto;
 import com.okestudio.booking.dto.ResultPageResponseDto;
 import com.okestudio.booking.entity.City;
+import com.okestudio.booking.mapper.AvailableFilmMapper;
 import com.okestudio.booking.mapper.CityMapper;
+import com.okestudio.booking.repository.AvailableFilmViewRepository;
 import com.okestudio.booking.repository.CityRepository;
 import com.okestudio.booking.service.CityService;
+import com.okestudio.booking.view.AvailableFilmView;
 import com.okestudio.util.PaginationUtil;
 
 @Service
@@ -20,12 +24,18 @@ public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
     private final CityMapper cityMapper;
+    private final AvailableFilmViewRepository availableFilmViewRepository;
+    private final AvailableFilmMapper availableFilmsMapper;
 
     public CityServiceImpl(
             CityRepository cityRepository,
-            CityMapper cityMapper) {
+            CityMapper cityMapper,
+            AvailableFilmViewRepository availableFilmViewRepository,
+            AvailableFilmMapper availableFilmsMapper) {
         this.cityRepository = cityRepository;
         this.cityMapper = cityMapper;
+        this.availableFilmViewRepository = availableFilmViewRepository;
+        this.availableFilmsMapper = availableFilmsMapper;
     }
 
     @Override
@@ -47,4 +57,25 @@ public class CityServiceImpl implements CityService {
         return new ResultPageResponseDto<>(dtoList, citiesPage.getTotalElements(), citiesPage.getTotalPages(),
                 citiesPage.getSize(), citiesPage.getNumber());
     }
+
+    @Override
+    public ResultPageResponseDto<AvailableFilmsDto> getFilmsByCityAndTitle(Long cityId, String title, Integer page, Integer size,
+            String sortBy, String sortDirection) {
+        Pageable pageable = PaginationUtil.getPageable(page, size, sortBy, sortDirection);
+
+        Page<AvailableFilmView> availableFilms;
+        if(title == null || title.isBlank()) {
+            availableFilms = availableFilmViewRepository.findByCityId(cityId, pageable);
+        } else {
+            availableFilms = availableFilmViewRepository.findByCityIdAndTitleContainingIgnoreCase(cityId, title, pageable);
+        }
+
+        List<AvailableFilmsDto> dtoList = availableFilms
+            .map(availableFilmsMapper::toAvailableFilmsDto)
+            .getContent();
+
+        return new ResultPageResponseDto<>(dtoList, availableFilms.getTotalElements(), availableFilms.getTotalPages(),
+                availableFilms.getSize(), availableFilms.getNumber());
+    }
+
 }
